@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:layout_margin="5dp"
+    android:padding="2dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="?attr/selectableItemBackground"
+    android:layout_marginBottom="5dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+
+        android:layout_width="70dp"
+        android:layout_height="40dp"
+        android:src="@drawable/folder_icon"
+        android:contentDescription="@string/image"
+        android:tint="@color/cool_bluee"
+        android:layout_gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/folderNameFV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/folder_name"
+        android:textSize="18sp"
+        android:gravity="center_vertical"
+        android:layout_marginHorizontal="5dp"
+        android:textColor="@color/black"/>
+
+</LinearLayout>
