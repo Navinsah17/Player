@@ -28,6 +28,7 @@ class FolderAcivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityFolderAcivityBinding.inflate(layoutInflater)
         setTheme(R.style.coolBlueeNav)
+
         setContentView(binding.root)
 
 
