@@ -1,10 +1,12 @@
 package com.example.vplayer
 
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
 import android.view.WindowInsets
@@ -13,12 +15,14 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.example.vplayer.databinding.ActivityPlayerBinding
+import com.example.vplayer.databinding.FeaturesBinding
 import com.example.vplayer.dataclass.Video
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class PlayerActivity : AppCompatActivity() {
     lateinit var binding: ActivityPlayerBinding
@@ -30,6 +34,7 @@ class PlayerActivity : AppCompatActivity() {
         var position: Int = -1
         var repeat : Boolean = false
         private var isFull : Boolean = false
+        private var isLock: Boolean = false
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,7 +76,7 @@ class PlayerActivity : AppCompatActivity() {
         else binding.repeatBtn.setImageResource(com.google.android.exoplayer2.ui.R.drawable.exo_controls_repeat_off)
 
     }
-    private fun initializedBinding(){
+    private fun initializedBinding() {
 
         binding.backBtn.setOnClickListener {
             finish()
@@ -87,11 +92,11 @@ class PlayerActivity : AppCompatActivity() {
             nextPrevVideo(isNext = false)
         }
         binding.repeatBtn.setOnClickListener {
-            if (repeat){
+            if (repeat) {
                 repeat = false
                 player.repeatMode = Player.REPEAT_MODE_OFF
                 binding.repeatBtn.setImageResource(com.google.android.exoplayer2.ui.R.drawable.exo_controls_repeat_off)
-            }else{
+            } else {
                 repeat = true
                 player.repeatMode = Player.REPEAT_MODE_ONE
                 binding.repeatBtn.setImageResource(com.google.android.exoplayer2.ui.R.drawable.exo_controls_repeat_all)
@@ -101,13 +106,37 @@ class PlayerActivity : AppCompatActivity() {
             if (isFull) {
                 isFull = false
                 playInFullScreen(false)
-            }else{
+            } else {
                 isFull = true
                 playInFullScreen(true)
             }
         }
-    }
+        binding.lockBtn.setOnClickListener {
+            if (!isLock) {
+                isLock = true
+                binding.playerView.hideController()
+                binding.playerView.useController = false
+                binding.lockBtn.setImageResource(R.drawable.baseline_lock_24)
 
+            } else {
+                isLock = false
+                binding.playerView.useController = true
+                binding.playerView.showController()
+                binding.lockBtn.setImageResource(R.drawable.lock_open_24)
+
+            }
+        }
+        binding.moreBtn.setOnClickListener {
+            pauseVideo()
+            val customDialog = LayoutInflater.from(this).inflate(R.layout.features,binding.root,false)
+            val bindingF = FeaturesBinding.bind(customDialog)
+            val dialog = MaterialAlertDialogBuilder(this).setView(customDialog).setOnCancelListener {
+                playVideo()
+            }.setBackground(ColorDrawable(0x803700B3.toInt())).create()
+            dialog.show()
+
+        }
+    }
     private fun createPLayer(){
         try {
             player.release()
@@ -187,6 +216,9 @@ class PlayerActivity : AppCompatActivity() {
         binding.topcontroller.visibility = visibility
         binding.bottomcontroller.visibility = visibility
         binding.playBtn.visibility = visibility
+        if (isLock)
+            binding.lockBtn.visibility = View.VISIBLE
+        else binding.lockBtn.visibility = visibility
     }
     override fun onDestroy() {
         super.onDestroy()
