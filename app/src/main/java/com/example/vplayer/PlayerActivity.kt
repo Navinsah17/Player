@@ -3,6 +3,9 @@ package com.example.vplayer
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.View
 import android.view.Window
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -19,6 +22,7 @@ import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 
 class PlayerActivity : AppCompatActivity() {
     lateinit var binding: ActivityPlayerBinding
+    private lateinit var runnable: Runnable
 
     companion object{
         lateinit var player : SimpleExoPlayer
@@ -124,6 +128,7 @@ class PlayerActivity : AppCompatActivity() {
             }
         })
         playInFullScreen(enable = isFull)
+        setVisibility()
     }
     private fun playVideo(){
         binding.playBtn.setImageResource(R.drawable.baseline_pause_24)
@@ -164,6 +169,24 @@ class PlayerActivity : AppCompatActivity() {
             binding.fullScreenBtn.setImageResource(R.drawable.baseline_fullscreen_24)
         }
 
+    }
+    private fun setVisibility(){
+        runnable = Runnable {
+            if (binding.playerView.isControllerVisible){
+                hideandShow(View.VISIBLE)
+            }else{
+                hideandShow(View.INVISIBLE)
+            }///----------------------------------------------handle visibility
+            Handler(Looper.getMainLooper()).postDelayed(runnable,300)
+
+        }
+        Handler(Looper.getMainLooper()).postDelayed(runnable,0)
+    }
+
+    private fun hideandShow(visibility : Int ){
+        binding.topcontroller.visibility = visibility
+        binding.bottomcontroller.visibility = visibility
+        binding.playBtn.visibility = visibility
     }
     override fun onDestroy() {
         super.onDestroy()
