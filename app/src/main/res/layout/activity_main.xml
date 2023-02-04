@@ -29,8 +29,6 @@
             app:itemIconTint="@color/cool_bluee"
             android:backgroundTint="@color/white"
             />
-        <!--app:itemTextAppearanceActive="@color/black"
-        app:itemTextAppearanceInactive="@android:color/darker_gray"-->
     </androidx.appcompat.widget.LinearLayoutCompat>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navView"
@@ -43,6 +41,7 @@
         android:background="@color/white"
         app:itemTextColor="@color/black"
         app:itemIconTint="@color/cool_bluee"
+
         />
 
 

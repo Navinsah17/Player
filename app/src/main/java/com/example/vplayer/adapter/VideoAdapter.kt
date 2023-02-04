@@ -1,22 +1,26 @@
 package com.example.vplayer.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.vplayer.PlayerActivity
 import com.example.vplayer.R
 import com.example.vplayer.databinding.VideoViewBinding
 import com.example.vplayer.dataclass.Video
 
-class VideoAdapter(private val context: Context, var videoList: ArrayList<Video>) : RecyclerView.Adapter<VideoAdapter.MyHolder>(){
+class VideoAdapter(private val context: Context, var videoList: ArrayList<Video>,private val isFolder: Boolean = false ) : RecyclerView.Adapter<VideoAdapter.MyHolder>(){
     class MyHolder(binding : VideoViewBinding): RecyclerView.ViewHolder(binding.root) {
         val title = binding.videoName
         val folder = binding.folderName
         val duartion = binding.duration
         val image = binding.videoIMG
+        val root = binding.root
 
 
 
@@ -39,6 +43,22 @@ class VideoAdapter(private val context: Context, var videoList: ArrayList<Video>
             .load(videoList[position].artUri)
             .apply(RequestOptions().placeholder(R.drawable.all_videos_icon).centerCrop())
             .into(holder.image)
+        holder.root.setOnClickListener {
 
+            when{
+                isFolder -> {
+                    sendIntent(pos = position,ref = "FolderActivity")
+                }
+                else ->{
+                    sendIntent(pos = position, ref = "AllVideos")
+                }
+            }
+        }
+    }
+    private fun sendIntent(pos:Int , ref: String){
+        PlayerActivity.position = pos
+        val intent =  Intent(context,PlayerActivity::class.java)
+        intent.putExtra("class",ref)
+        ContextCompat.startActivity(context,intent,null)
     }
 }

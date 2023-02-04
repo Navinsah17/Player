@@ -39,7 +39,7 @@ class FolderAcivity : AppCompatActivity() {
         binding.videoRVFA.setHasFixedSize(true)
         binding.videoRVFA.setItemViewCacheSize(10)
         binding.videoRVFA.layoutManager = LinearLayoutManager(this@FolderAcivity)
-        binding.videoRVFA.adapter = VideoAdapter(this@FolderAcivity, currentFolderVideos)
+        binding.videoRVFA.adapter = VideoAdapter(this@FolderAcivity, currentFolderVideos,true)
         binding.totalVdsFA.text ="Total Videos: ${currentFolderVideos.size}"
     }
 
