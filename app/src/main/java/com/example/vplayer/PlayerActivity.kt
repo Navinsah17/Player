@@ -1,6 +1,7 @@
 package com.example.vplayer
 
 import android.graphics.drawable.ColorDrawable
+import android.media.audiofx.LoudnessEnhancer
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,12 +12,15 @@ import android.view.View
 import android.view.Window
 import android.view.WindowInsets
 import android.view.WindowManager
+import android.widget.CheckBox
 import android.widget.Toast
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.example.vplayer.databinding.ActivityPlayerBinding
+import com.example.vplayer.databinding.AudioBoosterBinding
 import com.example.vplayer.databinding.FeaturesBinding
+import com.example.vplayer.databinding.SpeedBinding
 import com.example.vplayer.dataclass.Video
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.MediaItem
@@ -25,8 +29,10 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.text.DecimalFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.system.exitProcess
 
 class PlayerActivity : AppCompatActivity() {
     lateinit var binding: ActivityPlayerBinding
@@ -40,7 +46,11 @@ class PlayerActivity : AppCompatActivity() {
         var repeat : Boolean = false
         private var isFull : Boolean = false
         private var isLock: Boolean = false
+        private var speed: Float = 1.0f
         lateinit var trackSelector : DefaultTrackSelector
+        lateinit var audioEnhancer: LoudnessEnhancer
+        var timer: Timer? = null
+        private var isSpeedChecked: Boolean = false
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -158,7 +168,7 @@ class PlayerActivity : AppCompatActivity() {
                     .setOnCancelListener {
                     playVideo()
                 }
-                    .setBackground(ColorDrawable(0x803700B3.toInt()))
+                    .setBackground(ColorDrawable(0xFF000000.toInt()))
                     .setItems(tempTracks){_,position ->
                     Toast.makeText(this,audioTrack[position] + "Selected ", Toast.LENGTH_SHORT).show()
                     trackSelector.setParameters(trackSelector.buildUponParameters()
@@ -183,6 +193,94 @@ class PlayerActivity : AppCompatActivity() {
                     Toast.makeText(this,"Subtitles On", Toast.LENGTH_SHORT).show()
                     isSubtitle = true
                 }
+                dialog.dismiss()
+                playVideo()
+            }
+            //--------------------------------------------------
+            bindingF.audioBooster.setOnClickListener {
+                dialog.dismiss()
+                val customDialogAB = LayoutInflater.from(this).inflate(R.layout.audio_booster,binding.root,false)
+                val bindingAB = AudioBoosterBinding.bind(customDialogAB)
+                val dialogAB = MaterialAlertDialogBuilder(this).setView(customDialogAB).setOnCancelListener {
+                    playVideo()
+                }.setPositiveButton("OK"){self, _ ->
+                    audioEnhancer.setTargetGain(bindingAB.verticalBar.progress*100)
+                    playVideo()
+                    self.dismiss()
+                }
+                    .setBackground(ColorDrawable(0xFF000000.toInt()))
+                    .create()
+
+                dialogAB.show()
+                bindingAB.verticalBar.progress = audioEnhancer.targetGain.toInt()/100
+                bindingAB.progressText.text = "Audio Boost\n\n${audioEnhancer.targetGain.toInt()/10}"
+                bindingAB.verticalBar.setOnProgressChangeListener {
+                    bindingAB.progressText.text = "Audio Boost\n\n${it*10}"
+                }
+                playVideo()
+            }
+            //--------------------------------
+            bindingF.speedbtn.setOnClickListener {
+                dialog.dismiss()
+                playVideo()
+                val customDialogS = LayoutInflater.from(this).inflate(R.layout.speed, binding.root, false)
+                val bindingS = SpeedBinding.bind(customDialogS)
+                val dialogS = MaterialAlertDialogBuilder(this).setView(customDialogS)
+                    .setCancelable(false)
+                    .setPositiveButton("OK"){self, _ ->
+                        self.dismiss()
+                    }
+                    .setBackground(ColorDrawable(0xFF000000.toInt()))
+                    .create()
+                dialogS.show()
+                bindingS.speedText.text = "${DecimalFormat("#.##").format(speed)} X"
+                bindingS.minusBtn.setOnClickListener {
+                    changeSpeed(isIncrement = false)
+                    bindingS.speedText.text = "${DecimalFormat("#.##").format(speed)} X"
+                }
+                bindingS.plusBtn.setOnClickListener {
+                    changeSpeed(isIncrement = true)
+                    bindingS.speedText.text = "${DecimalFormat("#.##").format(speed)} X"
+                }
+
+            }
+            //------------------------
+            bindingF.sleepbtn.setOnClickListener {
+                dialog.dismiss()
+                if (timer != null)  Toast.makeText(this,"Timer already running! \n Close App to Reset !",Toast.LENGTH_SHORT).show()
+
+                else{
+                    var sleepTime = 15
+                    val customDialogS = LayoutInflater.from(this).inflate(R.layout.speed, binding.root, false)
+                    val bindingS = SpeedBinding.bind(customDialogS)
+                    val dialogS = MaterialAlertDialogBuilder(this).setView(customDialogS)
+                        .setCancelable(false)
+                        .setPositiveButton("OK"){self, _ ->
+                            timer = Timer()
+                            val task = object :TimerTask(){
+                                override fun run() {
+                                    moveTaskToBack(true)
+                                    exitProcess(1)
+                                }
+                            }
+                            timer!!.schedule(task, sleepTime *60 * 1000.toLong())
+                            self.dismiss()
+                            playVideo()
+                        }
+                        .setBackground(ColorDrawable(0xFF000000.toInt()))
+                        .create()
+                    dialogS.show()
+                    bindingS.speedText.text = "$sleepTime Min"
+                    bindingS.minusBtn.setOnClickListener {
+                        if (sleepTime > 15 ) sleepTime -= 15
+                        bindingS.speedText.text = "$sleepTime Min"
+                    }
+                    bindingS.plusBtn.setOnClickListener {
+                        if (sleepTime < 120)sleepTime += 15
+                        bindingS.speedText.text = "$sleepTime Min"
+                    }
+                }
+
             }
 
         }
@@ -209,6 +307,8 @@ class PlayerActivity : AppCompatActivity() {
         })
         playInFullScreen(enable = isFull)
         setVisibility()
+        audioEnhancer = LoudnessEnhancer(player.audioSessionId)
+        audioEnhancer.enabled = true
 
     }
     private fun playVideo(){
@@ -250,6 +350,20 @@ class PlayerActivity : AppCompatActivity() {
             binding.fullScreenBtn.setImageResource(R.drawable.baseline_fullscreen_24)
         }
 
+    }
+
+    private fun changeSpeed(isIncrement: Boolean){
+        if(isIncrement){
+            if(speed <= 2.9f){
+                speed += 0.10f //speed = speed + 0.10f
+            }
+        }
+        else{
+            if(speed > 0.20f){
+                speed -= 0.10f
+            }
+        }
+        player.setPlaybackSpeed(speed)
     }
     private fun setVisibility(){
         runnable = Runnable {

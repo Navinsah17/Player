@@ -44,6 +44,7 @@
             android:textColor="@color/white"
             style="@style/Widget.AppCompat.Button.Borderless"/>
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/audio_booster"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:icon="@drawable/baseline_speaker_24"
@@ -65,6 +66,7 @@
         android:orientation="horizontal">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/speedbtn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:icon="@drawable/baseline_speed_24"
@@ -79,6 +81,7 @@
             android:textColor="@color/white"
             style="@style/Widget.AppCompat.Button.Borderless"/>
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/sleepbtn"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             app:icon="@drawable/baseline_timer_24"
