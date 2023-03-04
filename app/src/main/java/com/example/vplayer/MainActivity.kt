@@ -2,24 +2,31 @@ package com.example.vplayer
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Message
 import android.provider.MediaStore
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.vplayer.databinding.ActivityMainBinding
+import com.example.vplayer.databinding.FeaturesBinding
 import com.example.vplayer.dataclass.Folder
 import com.example.vplayer.dataclass.Video
 import com.example.vplayer.fragment.FolderFragment
 import com.example.vplayer.fragment.VideoFragment
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
 import kotlin.system.exitProcess
@@ -28,12 +35,18 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var toggle: ActionBarDrawerToggle
 
+
+
     companion object{
         lateinit var videoList: ArrayList<Video>
         lateinit var folderList: ArrayList<Folder>
+        lateinit var searchList: ArrayList<Video>
+        var search: Boolean = false
         var sortValue: Int = 0
 
+
         val sortList = arrayOf(
+            MediaStore.Video.Media.DATE_ADDED + " DESC",
             MediaStore.Video.Media.DATE_ADDED,
             MediaStore.Video.Media.TITLE,
             MediaStore.Video.Media.TITLE + " DESC",
@@ -47,6 +60,8 @@ class MainActivity : AppCompatActivity() {
         setTheme(R.style.coolBlueeNav)
         setContentView(binding.root)
 
+
+
         toggle = ActionBarDrawerToggle(this,binding.root,R.string.open,R.string.close)
         binding.root.addDrawerListener(toggle)
         toggle.syncState()
@@ -57,6 +72,7 @@ class MainActivity : AppCompatActivity() {
             setFragment(VideoFragment())
         }
 
+
         binding.bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.videoView -> setFragment(VideoFragment())
@@ -64,15 +80,50 @@ class MainActivity : AppCompatActivity() {
             }
             return@setOnItemSelectedListener true
         }
+
         binding.navView.setNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.navYoutube -> toast("youtube")
                 R.id.navUrl-> toast("online")
                 R.id.themesNav -> toast("themes")
-                R.id.sortOrderNav -> toast("sort")
+
+
+                R.id.sortOrderNav -> {
+                    val menuItems = arrayOf(
+                        "Latest",
+                        "Oldest",
+                        "Name(A to Z)",
+                        "Name(Z to A)",
+                        "File Size(Smallest)",
+                        "File Size(Largest)"
+                    )
+
+                    var value = sortValue
+                    val dialog = MaterialAlertDialogBuilder(this)
+                        .setTitle("Sort By")
+                        .setPositiveButton("OK") { _, _ ->
+                            val sortEditor = getSharedPreferences("Sorting", MODE_PRIVATE).edit()
+                            sortEditor.putInt("sortValue", value)
+                            sortEditor.apply()
+
+                            //for restarting app
+                            finish()
+                            startActivity(intent)
+                        }
+
+                        .setSingleChoiceItems(menuItems, sortValue) { _, pos ->
+                            value = pos
+                        }
+
+                        .create()
+                    dialog.show()
+                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setBackgroundColor(Color.RED)
+                }
+
                 R.id.aboutNav -> toast("about")
                 R.id.exitNav -> exitProcess(1)
             }
+
             return@setNavigationItemSelectedListener true
         }
     }
@@ -152,6 +203,8 @@ class MainActivity : AppCompatActivity() {
     }
     @SuppressLint("Recycle", "Range", "SuspiciousIndentation")
     private fun getAllVideo(): ArrayList<Video>{
+        val sortEditor = getSharedPreferences("Sorting", MODE_PRIVATE)
+        sortValue = sortEditor.getInt("sortValue",0)
         val tempList = ArrayList<Video>()
         val tempFolderList = ArrayList<String>()
         val projection = arrayOf(
@@ -160,7 +213,7 @@ class MainActivity : AppCompatActivity() {
             MediaStore.Video.Media.DURATION, MediaStore.Video.Media.BUCKET_ID)
         val cursor = this.contentResolver.query(
             MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, null, null,
-            MainActivity.sortList[MainActivity.sortValue])
+            sortList[sortValue])
         if(cursor != null)
             if(cursor.moveToNext())
                 do {

@@ -3,6 +3,7 @@
 
     <item android:id="@+id/videoView"
         android:title="@string/all_videos"
+
         android:icon="@drawable/all_videos_icon"/>
     <item android:id="@+id/foldersView"
         android:title="@string/all_folders"

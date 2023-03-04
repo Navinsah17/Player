@@ -1,7 +1,14 @@
 package com.example.vplayer
 
+import android.annotation.SuppressLint
+import android.app.AppOpsManager
+import android.app.PictureInPictureParams
+import android.content.Context
+import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.drawable.ColorDrawable
 import android.media.audiofx.LoudnessEnhancer
+import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,6 +21,7 @@ import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.CheckBox
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -51,6 +59,7 @@ class PlayerActivity : AppCompatActivity() {
         lateinit var audioEnhancer: LoudnessEnhancer
         var timer: Timer? = null
         private var isSpeedChecked: Boolean = false
+        var pipStatus: Int = 0
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +81,20 @@ class PlayerActivity : AppCompatActivity() {
         //-----------------------------------------------------
         initializedLayout()
         initializedBinding()
+        binding.forward.setOnClickListener(DoubleClick(callback = object : DoubleClick.Callback{
+            override fun doubleClicked() {
+                binding.playerView.showController()
+                binding.forwardbtn.visibility = View.VISIBLE
+                player.seekTo(player.currentPosition + 10000)
+            }
+        }))
+        binding.rewind.setOnClickListener(DoubleClick(callback = object : DoubleClick.Callback{
+            override fun doubleClicked() {
+                binding.playerView.showController()
+                binding.rewindbtn.visibility = View.VISIBLE
+                player.seekTo(player.currentPosition - 10000)
+            }
+        }))
 
     }
 
@@ -85,6 +108,11 @@ class PlayerActivity : AppCompatActivity() {
             "FolderActivity" -> {
                 playerList = ArrayList()
                 playerList.addAll(FolderAcivity.currentFolderVideos)
+                createPLayer()
+            }
+            "SearchedVideos" -> {
+                playerList = ArrayList()
+                playerList.addAll(MainActivity.searchList)
                 createPLayer()
             }
         }
@@ -150,7 +178,7 @@ class PlayerActivity : AppCompatActivity() {
                 playVideo()
             }.setBackground(ColorDrawable(0x803700B3.toInt())).create()
             dialog.show()
-//-------------------------------------------------------------------
+//-----------------------------audio--------------------------------------
             bindingF.audioTrack.setOnClickListener {
                 dialog.dismiss()
                 playVideo()
@@ -178,7 +206,7 @@ class PlayerActivity : AppCompatActivity() {
                     .create()
                     .show()
             }
-            //---------------------------------------------------------------------------------------------
+            //--------------------subtitle-------------------------------------------------------------------------
             bindingF.subtitleBtn.setOnClickListener {
                 if (isSubtitle){
                     trackSelector.parameters = DefaultTrackSelector.ParametersBuilder(this).setRendererDisabled(
@@ -196,7 +224,7 @@ class PlayerActivity : AppCompatActivity() {
                 dialog.dismiss()
                 playVideo()
             }
-            //--------------------------------------------------
+            //---------------audio-----------------------------------
             bindingF.audioBooster.setOnClickListener {
                 dialog.dismiss()
                 val customDialogAB = LayoutInflater.from(this).inflate(R.layout.audio_booster,binding.root,false)
@@ -219,7 +247,7 @@ class PlayerActivity : AppCompatActivity() {
                 }
                 playVideo()
             }
-            //--------------------------------
+            //--------------speed------------------
             bindingF.speedbtn.setOnClickListener {
                 dialog.dismiss()
                 playVideo()
@@ -244,7 +272,7 @@ class PlayerActivity : AppCompatActivity() {
                 }
 
             }
-            //------------------------
+            //-------------sleep-----------
             bindingF.sleepbtn.setOnClickListener {
                 dialog.dismiss()
                 if (timer != null)  Toast.makeText(this,"Timer already running! \n Close App to Reset !",Toast.LENGTH_SHORT).show()
@@ -282,6 +310,35 @@ class PlayerActivity : AppCompatActivity() {
                 }
 
             }
+            //---------------------pipbtn-------------
+            bindingF.pipbtn.setOnClickListener {
+                val appOps = getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+                val status = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    appOps.checkOpNoThrow(AppOpsManager.OPSTR_PICTURE_IN_PICTURE, android.os.Process.myUid(), packageName)==
+                            AppOpsManager.MODE_ALLOWED
+                } else { false }
+
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                    if (status) {
+                        this.enterPictureInPictureMode(PictureInPictureParams.Builder().build())
+                        dialog.dismiss()
+                        binding.playerView.hideController()
+                        playVideo()
+                        pipStatus = 0
+                    }
+                    else{
+                        val intent = Intent("android.settings.PICTURE_IN_PICTURE_SETTINGS",
+                            Uri.parse("package:$packageName"))
+                        startActivity(intent)
+                    }
+
+                }else{
+                    Toast.makeText(this, "Feature Not Supported!!", Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
+                    playVideo()
+                }
+            }
+            //-----------------------------------------
 
         }
     }
@@ -378,6 +435,23 @@ class PlayerActivity : AppCompatActivity() {
         Handler(Looper.getMainLooper()).postDelayed(runnable,0)
     }
 
+    @SuppressLint("MissingSuperCall")
+    override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean) {
+
+        if(pipStatus != 0){
+            finish()
+            val intent = Intent(this, PlayerActivity::class.java)
+            when(pipStatus){
+                1 -> intent.putExtra("class","FolderActivity")
+                2 -> intent.putExtra("class","SearchedVideos")
+                3 -> intent.putExtra("class","AllVideos")
+            }
+            startActivity(intent)
+        }
+
+
+    }
+
     private fun hideandShow(visibility : Int ){
         binding.topcontroller.visibility = visibility
         binding.bottomcontroller.visibility = visibility
@@ -385,6 +459,9 @@ class PlayerActivity : AppCompatActivity() {
         if (isLock)
             binding.lockBtn.visibility = View.VISIBLE
         else binding.lockBtn.visibility = visibility
+        binding.rewindbtn.visibility = View.GONE
+        binding.forwardbtn.visibility = View.GONE
+
     }
     override fun onDestroy() {
         super.onDestroy()
