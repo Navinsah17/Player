@@ -21,7 +21,6 @@ import com.example.vplayer.PlayerActivity
 import com.example.vplayer.R
 import com.example.vplayer.databinding.DetailsBinding
 import com.example.vplayer.databinding.FeaturesBinding
-import com.example.vplayer.databinding.VideoFeaturesBinding
 import com.example.vplayer.databinding.VideoViewBinding
 import com.example.vplayer.dataclass.Video
 import com.google.android.material.color.MaterialColors
@@ -59,6 +58,10 @@ class VideoAdapter(private val context: Context, var videoList: ArrayList<Video>
         holder.root.setOnClickListener {
 
             when{
+                videoList[position].id == PlayerActivity.nowlayingId -> {
+                    sendIntent(pos = position,ref = "NowPlaying")
+                }
+
                 isFolder -> {
                     PlayerActivity.pipStatus = 1
                     sendIntent(pos = position,ref = "FolderActivity")
@@ -75,8 +78,8 @@ class VideoAdapter(private val context: Context, var videoList: ArrayList<Video>
         }
         holder.root.setOnLongClickListener{
 
-            val customDialog = LayoutInflater.from(context).inflate(R.layout.video_features,holder.root,false)
-            val bindingF = com.example.vplayer.databinding.VideoFeaturesBinding.bind(customDialog)
+            val customDialog = LayoutInflater.from(context).inflate(R.layout.more_features,holder.root,false)
+            val bindingF = com.example.vplayer.databinding.MoreFeaturesBinding.bind(customDialog)
             val dialog = MaterialAlertDialogBuilder(context).setView(customDialog)
 //                .setBackground(ColorDrawable(0x803700B3.toInt()))
                 .create()
@@ -108,7 +111,7 @@ class VideoAdapter(private val context: Context, var videoList: ArrayList<Video>
                     .bold { append("\n\nLocation: ") }.append(videoList[position].path)
 
 
-                bindingIF.detail.text = detailsText
+                bindingIF.detailTV.text = detailsText
                 dialogIF.getButton(AlertDialog.BUTTON_POSITIVE).setBackgroundColor(
                     MaterialColors.getColor(context, R.attr.themeColor, Color.RED)
                 )

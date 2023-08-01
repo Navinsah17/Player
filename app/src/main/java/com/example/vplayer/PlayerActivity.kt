@@ -46,6 +46,7 @@ class PlayerActivity : AppCompatActivity() {
     lateinit var binding: ActivityPlayerBinding
     private lateinit var runnable: Runnable
     private var isSubtitle: Boolean = true
+    private var moreTime: Int = 0;
 
     companion object{
         lateinit var player : SimpleExoPlayer
@@ -54,6 +55,7 @@ class PlayerActivity : AppCompatActivity() {
         var repeat : Boolean = false
         private var isFull : Boolean = false
         private var isLock: Boolean = false
+        var nowlayingId : String = ""
         private var speed: Float = 1.0f
         lateinit var trackSelector : DefaultTrackSelector
         lateinit var audioEnhancer: LoudnessEnhancer
@@ -114,6 +116,15 @@ class PlayerActivity : AppCompatActivity() {
                 playerList = ArrayList()
                 playerList.addAll(MainActivity.searchList)
                 createPLayer()
+            }
+            "NowPlaying" ->{
+                speed = 1.0f
+                binding.videoTitle.text = playerList[position].title
+                binding.videoTitle.isSelected = true
+                binding.playerView.player = player
+                playVideo()
+                playInFullScreen(enable = isFull)
+                setVisibility()
             }
         }
         if (repeat) binding.repeatBtn.setImageResource(com.google.android.exoplayer2.ui.R.drawable.exo_controls_repeat_all)
@@ -367,6 +378,8 @@ class PlayerActivity : AppCompatActivity() {
         audioEnhancer = LoudnessEnhancer(player.audioSessionId)
         audioEnhancer.enabled = true
 
+        nowlayingId = playerList[position].id
+
     }
     private fun playVideo(){
         binding.playBtn.setImageResource(R.drawable.baseline_pause_24)
@@ -465,7 +478,7 @@ class PlayerActivity : AppCompatActivity() {
     }
     override fun onDestroy() {
         super.onDestroy()
-        player.release()
+        player.pause()
     }
 
 }

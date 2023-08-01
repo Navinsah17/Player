@@ -14,46 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/ThemeOverlay.AppCompat.DayNight"
-            android:background="@color/white"
-            android:elevation="0dp"
-            android:gravity="center_horizontal">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolBar"
-                android:layout_width="match_parent"
-                app:menu="@menu/search_menu"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/black">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ImageView
-                        android:id="@+id/hit_logo"
-                        android:layout_width="210dp"
-                        android:layout_height="match_parent"
-                        android:src="@drawable/img"
-                        android:text="INFORMATION TECHNOLOGY"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintHorizontal_bias="0.28"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-
-
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.appcompat.widget.Toolbar>
-        </com.google.android.material.appbar.AppBarLayout>
         
         <FrameLayout
             android:id="@+id/frameFL"

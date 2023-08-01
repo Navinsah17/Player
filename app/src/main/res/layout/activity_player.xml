@@ -93,7 +93,7 @@
                 android:id="@+id/rewindbtn"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/rewind_icon"
+                android:src="@drawable/rewind_btn"
                 app:tint="@color/white"
                 android:background="@android:color/transparent"
                 android:clickable="false"
