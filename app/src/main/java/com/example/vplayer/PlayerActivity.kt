@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.drawable.ColorDrawable
+import android.media.AudioManager
 import android.media.audiofx.LoudnessEnhancer
 import android.net.Uri
 import android.os.Build
@@ -42,7 +43,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
 
-class PlayerActivity : AppCompatActivity() {
+class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListener {
     lateinit var binding: ActivityPlayerBinding
     private lateinit var runnable: Runnable
     private var isSubtitle: Boolean = true
@@ -62,6 +63,7 @@ class PlayerActivity : AppCompatActivity() {
         var timer: Timer? = null
         private var isSpeedChecked: Boolean = false
         var pipStatus: Int = 0
+        private var audioManager: AudioManager? = null
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -461,6 +463,7 @@ class PlayerActivity : AppCompatActivity() {
             }
             startActivity(intent)
         }
+        if (!isInPictureInPictureMode) pauseVideo()
 
 
     }
@@ -476,9 +479,21 @@ class PlayerActivity : AppCompatActivity() {
         binding.forwardbtn.visibility = View.GONE
 
     }
+
     override fun onDestroy() {
         super.onDestroy()
         player.pause()
+        audioManager?.abandonAudioFocus(this)
+    }
+
+    override fun onAudioFocusChange(focusChange: Int) {
+        if(focusChange <= 0) pauseVideo()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (audioManager == null) audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager!!.requestAudioFocus(this,AudioManager.STREAM_MUSIC,AudioManager.AUDIOFOCUS_GAIN)
     }
 
 }

@@ -7,13 +7,12 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.os.Build
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.Message
 import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
@@ -34,7 +33,7 @@ import kotlin.system.exitProcess
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var toggle: ActionBarDrawerToggle
-
+    private var runnable: Runnable? = null
 
 
     companion object{
@@ -43,6 +42,8 @@ class MainActivity : AppCompatActivity() {
         lateinit var searchList: ArrayList<Video>
         var search: Boolean = false
         var sortValue: Int = 0
+        var dataChanged : Boolean = false
+        var adapterChanged : Boolean = false
 
 
         val sortList = arrayOf(
@@ -70,10 +71,27 @@ class MainActivity : AppCompatActivity() {
             folderList = ArrayList()
             videoList = getAllVideo()
             setFragment(VideoFragment())
+
+            runnable = Runnable {
+
+                if(dataChanged){
+                    videoList = getAllVideo()
+                    dataChanged = false
+                    adapterChanged = true
+
+                }
+
+                ///----------------------------------------------handle visibility
+                Handler(Looper.getMainLooper()).postDelayed(runnable!!,300)
+
+                }
+                Handler(Looper.getMainLooper()).postDelayed(runnable!!,0)
+
         }
 
 
         binding.bottomNav.setOnItemSelectedListener {
+            //if(dataChanged) videoList = getAllVideo()
             when (it.itemId) {
                 R.id.videoView -> setFragment(VideoFragment())
                 R.id.foldersView -> setFragment(FolderFragment())
@@ -244,5 +262,10 @@ class MainActivity : AppCompatActivity() {
                 }while (cursor.moveToNext())
         cursor?.close()
         return tempList
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        runnable = null
     }
 }
