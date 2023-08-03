@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var toggle: ActionBarDrawerToggle
     private var runnable: Runnable? = null
+    private lateinit var currentFragment : Fragment
 
 
     companion object{
@@ -72,21 +73,25 @@ class MainActivity : AppCompatActivity() {
             videoList = getAllVideo()
             setFragment(VideoFragment())
 
-            runnable = Runnable {
 
-                if(dataChanged){
-                    videoList = getAllVideo()
-                    dataChanged = false
-                    adapterChanged = true
+//            runnable = Runnable {
+//
+//                if(dataChanged){
+//                    videoList = getAllVideo()
+//                    dataChanged = false
+//                    adapterChanged = true
+//
+//                }
+//
+//                ///----------------------------------------------handle visibility
+//                Handler(Looper.getMainLooper()).postDelayed(runnable!!,200)
+//
+//                }
+//                Handler(Looper.getMainLooper()).postDelayed(runnable!!,0)
 
-                }
-
-                ///----------------------------------------------handle visibility
-                Handler(Looper.getMainLooper()).postDelayed(runnable!!,300)
-
-                }
-                Handler(Looper.getMainLooper()).postDelayed(runnable!!,0)
-
+        }else{
+            folderList = ArrayList()
+            videoList = ArrayList()
         }
 
 
@@ -147,6 +152,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setFragment(fragment: Fragment){
+        currentFragment = fragment
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.frameFL, fragment)
         transaction.disallowAddToBackStack()
@@ -268,4 +274,9 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         runnable = null
     }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        (currentFragment as VideoFragment).adapter.onResult(requestCode, resultCode)
+    }
+
 }

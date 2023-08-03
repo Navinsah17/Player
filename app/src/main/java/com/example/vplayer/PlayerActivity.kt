@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
@@ -38,6 +39,7 @@ import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import java.io.File
 import java.text.DecimalFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -83,23 +85,32 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
 //            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
 //        }
         //-----------------------------------------------------
-        initializedLayout()
-        initializedBinding()
-        binding.forward.setOnClickListener(DoubleClick(callback = object : DoubleClick.Callback{
-            override fun doubleClicked() {
-                binding.playerView.showController()
-                binding.forwardbtn.visibility = View.VISIBLE
-                player.seekTo(player.currentPosition + 10000)
-            }
-        }))
-        binding.rewind.setOnClickListener(DoubleClick(callback = object : DoubleClick.Callback{
-            override fun doubleClicked() {
-                binding.playerView.showController()
-                binding.rewindbtn.visibility = View.VISIBLE
-                player.seekTo(player.currentPosition - 10000)
-            }
-        }))
 
+        try{
+            if(intent.data?.scheme.contentEquals("content")){
+
+                playerList = ArrayList()
+                position = 0
+                val cursor = contentResolver.query(intent.data!!, arrayOf(MediaStore.Video.Media.DATA),null,null,null)
+                cursor?.let{
+                    it.moveToFirst()
+                    val path = it.getString(it.getColumnIndexOrThrow(MediaStore.Video.Media.DATA))
+                    val file = File(path)
+                    val video = Video(id = "", title =  file.name, duration = 0L , artUri = Uri.fromFile(file),path = path, size = "", folderName = "")
+                    playerList.add(video)
+                    cursor.close()
+
+                }
+                createPLayer()
+                initializedBinding()
+            }
+            else{
+                initializedLayout()
+                initializedBinding()
+            }
+        }catch (e: Exception){
+            Toast.makeText(this,e.toString(),Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun initializedLayout(){
@@ -134,6 +145,21 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
 
     }
     private fun initializedBinding() {
+
+        binding.forward.setOnClickListener(DoubleClick(callback = object : DoubleClick.Callback{
+            override fun doubleClicked() {
+                binding.playerView.showController()
+                binding.forwardbtn.visibility = View.VISIBLE
+                player.seekTo(player.currentPosition + 10000)
+            }
+        }))
+        binding.rewind.setOnClickListener(DoubleClick(callback = object : DoubleClick.Callback{
+            override fun doubleClicked() {
+                binding.playerView.showController()
+                binding.rewindbtn.visibility = View.VISIBLE
+                player.seekTo(player.currentPosition - 10000)
+            }
+        }))
 
         binding.backBtn.setOnClickListener {
             finish()

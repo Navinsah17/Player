@@ -1,6 +1,7 @@
 package com.example.vplayer
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,9 +13,11 @@ import com.example.vplayer.adapter.VideoAdapter
 import com.example.vplayer.databinding.ActivityFolderAcivityBinding
 import com.example.vplayer.dataclass.Folder
 import com.example.vplayer.dataclass.Video
+import com.example.vplayer.fragment.VideoFragment
 import java.io.File
 
 class FolderAcivity : AppCompatActivity() {
+    lateinit var adapter: VideoAdapter
 
     companion object{
 
@@ -39,7 +42,8 @@ class FolderAcivity : AppCompatActivity() {
         binding.videoRVFA.setHasFixedSize(true)
         binding.videoRVFA.setItemViewCacheSize(10)
         binding.videoRVFA.layoutManager = LinearLayoutManager(this@FolderAcivity)
-        binding.videoRVFA.adapter = VideoAdapter(this@FolderAcivity, currentFolderVideos,true)
+        adapter = VideoAdapter(this@FolderAcivity, currentFolderVideos,true)
+        binding.videoRVFA.adapter = adapter
         binding.totalVdsFA.text ="Total Videos: ${currentFolderVideos.size}"
     }
 
@@ -82,6 +86,11 @@ class FolderAcivity : AppCompatActivity() {
                 }while (cursor.moveToNext())
         cursor?.close()
         return tempList
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        adapter.onResult(requestCode, resultCode)
     }
 
 }
