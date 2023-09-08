@@ -202,8 +202,8 @@ class MainActivity : AppCompatActivity() {
         if(requestCode == 14) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
-//                folderList = ArrayList()
-//                videoList = getAllVideos(this)
+                folderList = ArrayList()
+                videoList = getAllVideo()
                 setFragment(VideoFragment())
             }
             else Snackbar.make(binding.root, "Storage Permission Needed!!", 5000)
