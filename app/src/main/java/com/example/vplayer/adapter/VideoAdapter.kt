@@ -122,7 +122,7 @@ class VideoAdapter(private val context: Context, var videoList: ArrayList<Video>
             }
 
             bindingF.renameBtn.setOnClickListener {
-                requestPermissionR()
+                //requestPermissionR()
                 dialog.dismiss()
                 requestWriteR()
 
@@ -187,16 +187,16 @@ class VideoAdapter(private val context: Context, var videoList: ArrayList<Video>
         videoList.addAll(searchList)
         notifyDataSetChanged()
     }
-    private fun requestPermissionR(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                if(!Environment.isExternalStorageManager()){
-                    val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
-                    intent.addCategory("android.intent.category.DEFAULT")
-                    intent.data = Uri.parse("package:${context.applicationContext.packageName}")
-                    ContextCompat.startActivity(context, intent, null)
-                }
-            }
-    }
+//    private fun requestPermissionR(){
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+//                if(!Environment.isExternalStorageManager()){
+//                    val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+//                    intent.addCategory("android.intent.category.DEFAULT")
+//                    intent.data = Uri.parse("package:${context.applicationContext.packageName}")
+//                    ContextCompat.startActivity(context, intent, null)
+//                }
+//            }
+//    }
 
 
 
