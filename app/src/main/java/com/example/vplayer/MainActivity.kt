@@ -27,6 +27,7 @@ import com.example.vplayer.fragment.FolderFragment
 import com.example.vplayer.fragment.VideoFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+
 import java.io.File
 import kotlin.system.exitProcess
 
@@ -96,7 +97,7 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.bottomNav.setOnItemSelectedListener {
-            //if(dataChanged) videoList = getAllVideo()
+            if(dataChanged) videoList = getAllVideo()
             when (it.itemId) {
                 R.id.videoView -> setFragment(VideoFragment())
                 R.id.foldersView -> setFragment(FolderFragment())

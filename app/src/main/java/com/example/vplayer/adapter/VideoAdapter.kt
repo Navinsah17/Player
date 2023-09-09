@@ -1,11 +1,13 @@
 package com.example.vplayer.adapter
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.media.MediaScannerConnection
@@ -20,6 +22,7 @@ import android.text.format.Formatter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.text.bold
 import androidx.recyclerview.widget.RecyclerView
@@ -42,6 +45,8 @@ class VideoAdapter(private val context: Context, var videoList: ArrayList<Video>
 
     private var newPosition = 0
     private lateinit var dialogRF : androidx.appcompat.app.AlertDialog
+
+
     class MyHolder(binding: VideoViewBinding) : RecyclerView.ViewHolder(binding.root) {
         val title = binding.videoName
         val folder = binding.folderName
@@ -117,9 +122,10 @@ class VideoAdapter(private val context: Context, var videoList: ArrayList<Video>
             }
 
             bindingF.renameBtn.setOnClickListener {
-                //requestPermissionR()
+                requestPermissionR()
                 dialog.dismiss()
                 requestWriteR()
+
 
             }
 
@@ -127,54 +133,6 @@ class VideoAdapter(private val context: Context, var videoList: ArrayList<Video>
 
                 dialog.dismiss()
                 requestDeleteR(position = position)
-//
-//
-//                val dialogDF = MaterialAlertDialogBuilder(context)
-//                    .setTitle("Delete Video")
-//                    .setMessage(videoList[position].title)
-////                  .setBackground(ColorDrawable(0x803700B3.toInt()))
-//                    //.setCancelable(false)
-//                    .setPositiveButton("Yes") { self, _ ->
-//                        val file = File(videoList[position].path)
-//                        if (file.exists() && file.delete()) {
-//                            MediaScannerConnection.scanFile(
-//                                context, arrayOf(file.path),
-//                                arrayOf("video/*"), null
-//                            )
-//                            when {
-//                                MainActivity.search -> {
-//                                    MainActivity.dataChanged = true
-//                                    videoList.removeAt(position)
-//                                    notifyDataSetChanged()
-//                                }
-//                                isFolder -> {
-//                                    MainActivity.dataChanged = true
-//                                    FolderAcivity.currentFolderVideos.removeAt(position)
-//                                    notifyDataSetChanged()
-//                                }
-//                                else -> {
-//                                    MainActivity.videoList.removeAt(position)
-//                                    notifyDataSetChanged()
-//                                }
-//                            }
-//                        } else {
-//                            Toast.makeText(context, "permission Denied", Toast.LENGTH_SHORT).show()
-//
-//                        }
-//                        self.dismiss()
-//                    }
-//                    .setNegativeButton("No") { self, _ ->
-//                        self.dismiss()
-//                    }
-//                    .create()
-//                dialogDF.show()
-//
-//                dialogDF.getButton(AlertDialog.BUTTON_POSITIVE).setBackgroundColor(
-//                    MaterialColors.getColor(context, R.attr.themeColor, Color.BLUE)
-//                )
-//                dialogDF.getButton(AlertDialog.BUTTON_NEGATIVE).setBackgroundColor(
-//                    MaterialColors.getColor(context, R.attr.themeColor, Color.BLUE)
-//                )
 
 
             }
@@ -214,6 +172,8 @@ class VideoAdapter(private val context: Context, var videoList: ArrayList<Video>
         }
     }
 
+
+
     private fun sendIntent(pos: Int, ref: String) {
         PlayerActivity.position = pos
         val intent = Intent(context, PlayerActivity::class.java)
@@ -221,21 +181,26 @@ class VideoAdapter(private val context: Context, var videoList: ArrayList<Video>
         ContextCompat.startActivity(context, intent, null)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateList(searchList: ArrayList<Video>) {
         videoList = ArrayList()
         videoList.addAll(searchList)
         notifyDataSetChanged()
     }
-//    private fun requestPermissionR(){
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-//                if(!Environment.isExternalStorageManager()){
-//                    val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
-//                    intent.addCategory("android.intent.category.DEFAULT")
-//                    intent.data = Uri.parse("package:${context.applicationContext.packageName}")
-//                    ContextCompat.startActivity(context, intent, null)
-//                }
-//            }
-//    }
+    private fun requestPermissionR(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                if(!Environment.isExternalStorageManager()){
+                    val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+                    intent.addCategory("android.intent.category.DEFAULT")
+                    intent.data = Uri.parse("package:${context.applicationContext.packageName}")
+                    ContextCompat.startActivity(context, intent, null)
+                }
+            }
+    }
+
+
+
+
 
     private fun requestDeleteR(position: Int) {
         //list of videos to delete
@@ -293,6 +258,7 @@ class VideoAdapter(private val context: Context, var videoList: ArrayList<Video>
                 //MainActivity.videoList = getAllVideos(context)
                 FolderAcivity.currentFolderVideos.removeAt(position)
                 notifyDataSetChanged()
+
             }
             else -> {
                 MainActivity.videoList.removeAt(position)
@@ -394,6 +360,7 @@ class VideoAdapter(private val context: Context, var videoList: ArrayList<Video>
                 FolderAcivity.currentFolderVideos[position].path = newFile.path
                 FolderAcivity.currentFolderVideos[position].artUri = Uri.fromFile(newFile)
                 notifyItemChanged(position)
+                MainActivity.dataChanged = true;
 
             }
             else -> {
