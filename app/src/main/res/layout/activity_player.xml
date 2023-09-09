@@ -145,6 +145,13 @@
         android:background="#43000000">
 
         <ImageButton
+            android:id="@+id/orientation_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/baseline_screen_rotation_24"
+            android:backgroundTint="#0000ffff"
+            app:tint="@color/white" />
+        <ImageButton
             android:id="@+id/repeatBtn"
             android:layout_width="50dp"
             android:layout_height="50dp"

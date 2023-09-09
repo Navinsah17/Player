@@ -5,6 +5,7 @@ import android.app.AppOpsManager
 import android.app.PictureInPictureParams
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.drawable.ColorDrawable
 import android.media.AudioManager
@@ -22,6 +23,7 @@ import android.view.Window
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.CheckBox
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
@@ -145,6 +147,12 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
 
     }
     private fun initializedBinding() {
+        binding.orientationBtn.setOnClickListener {
+            requestedOrientation = if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+                ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+            else
+                ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+        }
 
         binding.forward.setOnClickListener(DoubleClick(callback = object : DoubleClick.Callback{
             override fun doubleClicked() {

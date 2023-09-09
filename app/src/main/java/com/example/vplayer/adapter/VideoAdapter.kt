@@ -199,9 +199,6 @@ class VideoAdapter(private val context: Context, var videoList: ArrayList<Video>
 //    }
 
 
-
-
-
     private fun requestDeleteR(position: Int) {
         //list of videos to delete
         val uriList: List<Uri> = listOf(
