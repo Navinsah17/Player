@@ -24,6 +24,7 @@ import android.view.Window
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.CheckBox
+import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -52,7 +53,7 @@ import kotlin.system.exitProcess
 
 class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListener {
     lateinit var binding: ActivityPlayerBinding
-    private lateinit var runnable: Runnable
+    //private lateinit var runnable: Runnable
     private var isSubtitle: Boolean = true
     private var moreTime: Int = 0;
     private lateinit var videoTitle: TextView
@@ -148,7 +149,7 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
                 binding.playerView.player = player
                 playVideo()
                 playInFullScreen(enable = isFull)
-                setVisibility()
+                //setVisibility()
             }
         }
         if (repeat) findViewById<ImageButton>(R.id.repeatBtn).setImageResource(com.google.android.exoplayer2.ui.R.drawable.exo_controls_repeat_all)
@@ -163,17 +164,17 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
                 ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
         }
 
-        binding.forward.setOnClickListener(DoubleClick(callback = object : DoubleClick.Callback{
+        findViewById<FrameLayout>(R.id.forward).setOnClickListener(DoubleClick(callback = object : DoubleClick.Callback{
             override fun doubleClicked() {
                 binding.playerView.showController()
-                binding.forwardbtn.visibility = View.VISIBLE
+                findViewById<ImageButton>(R.id.forwardbtn).visibility = View.VISIBLE
                 player.seekTo(player.currentPosition + 10000)
             }
         }))
-        binding.rewind.setOnClickListener(DoubleClick(callback = object : DoubleClick.Callback{
+        findViewById<FrameLayout>(R.id.rewind).setOnClickListener(DoubleClick(callback = object : DoubleClick.Callback{
             override fun doubleClicked() {
                 binding.playerView.showController()
-                binding.rewindbtn.visibility = View.VISIBLE
+                findViewById<ImageButton>(R.id.rewindbtn).visibility = View.VISIBLE
                 player.seekTo(player.currentPosition - 10000)
             }
         }))
@@ -181,7 +182,7 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
         findViewById<ImageButton>(R.id.backBtn).setOnClickListener {
             finish()
         }
-        binding.playBtn.setOnClickListener {
+        playBtn.setOnClickListener {
             if (player.isPlaying) pauseVideo()
             else playVideo()
         }
@@ -419,19 +420,31 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
             }
         })
         playInFullScreen(enable = isFull)
-        setVisibility()
+        //setVisibility()
         audioEnhancer = LoudnessEnhancer(player.audioSessionId)
         audioEnhancer.enabled = true
 
         nowlayingId = playerList[position].id
 
+        binding.playerView.setControllerVisibilityListener {
+            when{
+                isLock -> binding.lockBtn.visibility = View.VISIBLE
+                binding.playerView.isControllerVisible -> binding.lockBtn.visibility = View.VISIBLE
+                else -> binding.lockBtn.visibility = View.INVISIBLE
+
+            }
+            findViewById<ImageButton>(R.id.forwardbtn).visibility = View.GONE
+            findViewById<ImageButton>(R.id.rewindbtn).visibility = View.GONE
+        }
+
+
     }
     private fun playVideo(){
-        binding.playBtn.setImageResource(R.drawable.baseline_pause_24)
+        playBtn.setImageResource(R.drawable.baseline_pause_24)
         player.play()
     }
     private fun pauseVideo(){
-        binding.playBtn.setImageResource(R.drawable.baseline_play_arrow_24)
+        playBtn.setImageResource(R.drawable.baseline_play_arrow_24)
         player.pause()
     }
     private fun nextPrevVideo(isNext: Boolean = true){
@@ -480,18 +493,18 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
         }
         player.setPlaybackSpeed(speed)
     }
-    private fun setVisibility(){
-        runnable = Runnable {
-            if (binding.playerView.isControllerVisible){
-                hideandShow(View.VISIBLE)
-            }else{
-                hideandShow(View.INVISIBLE)
-            }///----------------------------------------------handle visibility
-            Handler(Looper.getMainLooper()).postDelayed(runnable,300)
-
-        }
-        Handler(Looper.getMainLooper()).postDelayed(runnable,0)
-    }
+//    private fun setVisibility(){
+//        runnable = Runnable {
+//            if (binding.playerView.isControllerVisible){
+//                hideandShow(View.VISIBLE)
+//            }else{
+//                hideandShow(View.INVISIBLE)
+//            }///----------------------------------------------handle visibility
+//            Handler(Looper.getMainLooper()).postDelayed(runnable,300)
+//
+//        }
+//        Handler(Looper.getMainLooper()).postDelayed(runnable,0)
+//    }
 
     @SuppressLint("MissingSuperCall")
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean) {
@@ -511,17 +524,17 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
 
     }
 
-    private fun hideandShow(visibility : Int ){
-        findViewById<LinearLayout>(R.id.topcontroller).visibility = visibility
-        findViewById<LinearLayout>(R.id.bottomcontroller).visibility = visibility
-        binding.playBtn.visibility = visibility
-        if (isLock)
-            binding.lockBtn.visibility = View.VISIBLE
-        else binding.lockBtn.visibility = visibility
-        binding.rewindbtn.visibility = View.GONE
-        binding.forwardbtn.visibility = View.GONE
-
-    }
+//    private fun hideandShow(visibility : Int ){
+////        findViewById<LinearLayout>(R.id.topcontroller).visibility = visibility
+////        findViewById<LinearLayout>(R.id.bottomcontroller).visibility = visibility
+////        binding.playBtn.visibility = visibility
+//        if (isLock)
+//            binding.lockBtn.visibility = View.VISIBLE
+//        else binding.lockBtn.visibility = visibility
+//        binding.rewindbtn.visibility = View.GONE
+//        binding.forwardbtn.visibility = View.GONE
+//
+//    }
 
     override fun onDestroy() {
         super.onDestroy()

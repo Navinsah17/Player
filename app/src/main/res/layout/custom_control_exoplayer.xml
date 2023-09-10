@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#43000000"
-    android:orientation="vertical">
+    android:background="#43000000">
   <LinearLayout
       android:id="@+id/topcontroller"
       android:layout_width="match_parent"
@@ -52,6 +51,67 @@
         app:tint="@color/white" />
   </LinearLayout>
 
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="250dp"
+      android:orientation="horizontal"
+      android:gravity="center"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent">
+
+    <FrameLayout
+        android:id="@+id/rewind"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+      <ImageButton
+          android:id="@+id/rewindbtn"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:src="@drawable/rewind_btn"
+          app:tint="@color/white"
+          android:background="@android:color/transparent"
+          android:clickable="false"
+          android:visibility="gone"
+          android:layout_gravity="center"
+          />
+
+    </FrameLayout>
+
+    <ImageButton
+        android:id="@+id/playBtn"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/baseline_play_arrow_24"
+        app:tint="@color/white"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:selectableItemBackground"/>
+
+    <FrameLayout
+        android:id="@+id/forward"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+      <ImageButton
+          android:id="@+id/forwardbtn"
+          android:layout_width="40dp"
+          android:layout_height="40dp"
+          android:src="@drawable/forward_icon"
+          app:tint="@color/white"
+          android:background="@android:color/transparent"
+          android:clickable="false"
+          android:visibility="gone"
+          android:layout_gravity="center"/>
+
+    </FrameLayout>
+
+  </LinearLayout>
+
   <com.google.android.exoplayer2.ui.DefaultTimeBar
       android:id="@id/exo_progress"
       android:layout_width="match_parent"
@@ -59,7 +119,7 @@
       android:layout_marginHorizontal="8dp"
       android:layout_marginBottom="40dp"
       app:buffered_color="#80FFFFFF"
-      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintBottom_toBottomOf="@+id/bottomcontroller"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.444"
       app:layout_constraintStart_toStartOf="parent"
@@ -72,7 +132,7 @@
   <LinearLayout
       android:id="@+id/bottomcontroller"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="50dp"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"
@@ -83,42 +143,46 @@
     <ImageButton
         android:id="@+id/orientation_btn"
         android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
         android:src="@drawable/baseline_screen_rotation_24"
-        android:backgroundTint="#0000ffff"
         app:tint="@color/white" />
     <ImageButton
         android:id="@+id/repeatBtn"
         android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
         android:src="@drawable/exo_controls_repeat_off"
-        android:backgroundTint="#0000ffff"
+
         app:tint="@color/white" />
 
     <ImageButton
         android:id="@+id/prevBtn"
         android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
         android:src="@drawable/prev_icon"
-        android:backgroundTint="#0000ffff"
+
         app:tint="@color/white"
         />
 
     <ImageButton
         android:id="@+id/nxtBtn"
         android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
         android:src="@drawable/next_icon"
-        android:backgroundTint="#0000ffff"
+
         app:tint="@color/white"
         />
 
     <ImageButton
         android:id="@+id/fullScreenBtn"
         android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_height="match_parent"
+        android:background="?attr/selectableItemBackground"
         android:src="@drawable/baseline_fullscreen_24"
-        android:backgroundTint="#0000ffff"
+
         app:tint="@color/white"
         />
   </LinearLayout>
