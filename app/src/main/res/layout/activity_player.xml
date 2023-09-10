@@ -15,7 +15,8 @@
         app:controller_layout_id="@layout/custom_control_exoplayer"
         app:use_controller="true"
         tools:layout_editor_absoluteX="-49dp"
-        tools:layout_editor_absoluteY="-25dp" />
+        tools:layout_editor_absoluteY="-25dp"
+        app:show_buffering="always"/>
     
 
 
