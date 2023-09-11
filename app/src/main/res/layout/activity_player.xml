@@ -8,37 +8,34 @@
     android:background="@color/black">
 
     <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
+
         <com.github.vkay94.dtpv.DoubleTapPlayerView
             android:id="@+id/playerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/black"
             android:keepScreenOn="true"
             app:controller_layout_id="@layout/custom_control_exoplayer"
-            android:background="@color/black"
             app:dtpv_controller="@id/yt_overlay"
+            app:show_buffering="always"
             tools:layout_editor_absoluteX="-49dp"
-            tools:layout_editor_absoluteY="-25dp"
-            app:show_buffering="always"/>
+            tools:layout_editor_absoluteY="-25dp" />
 
         <com.github.vkay94.dtpv.youtube.YouTubeOverlay
             android:id="@+id/yt_overlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:controller_layout_id="@layout/custom_control_exoplayer"
             android:background="#77000000"
+            android:visibility="invisible"
+            app:controller_layout_id="@layout/custom_control_exoplayer"
             app:yt_playerView="@id/playerView"
             tools:layout_editor_absoluteX="-49dp"
-            tools:layout_editor_absoluteY="-25dp"
-            android:visibility="invisible"/>
+            tools:layout_editor_absoluteY="-25dp" />
 
     </FrameLayout>
-
-
-    
-
 
     <ImageButton
         android:id="@+id/lockBtn"
@@ -49,6 +46,35 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/white" />
+
+    <Button
+        android:id="@+id/brightness_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/cool_bluee"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:drawableLeft="@drawable/baseline_brightness_6_24"
+        android:text="@string/O"
+        android:textStyle="bold"
+        android:visibility="gone"
+        />
+    <Button
+        android:id="@+id/volume_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/cool_bluee"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:drawableLeft="@drawable/volume_icon"
+        android:text="@string/O"
+        android:textStyle="bold"
+        android:visibility="gone"
+        />
 
 
 
