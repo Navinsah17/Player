@@ -1,6 +1,7 @@
 package com.example.vplayer
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.AppOpsManager
 import android.app.PictureInPictureParams
 import android.content.Context
@@ -8,6 +9,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.icu.text.CaseMap.Title
 import android.media.AudioManager
@@ -47,6 +49,7 @@ import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.DefaultTimeBar
 import com.google.android.exoplayer2.ui.TimeBar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import java.io.File
 import java.text.DecimalFormat
 import java.util.*
@@ -249,28 +252,52 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
                 dialog.dismiss()
                 playVideo()
 
-            val audioTrack = ArrayList<String>()
-            for(i in 0 until player.currentTrackGroups.length){
+                val audioTrack = ArrayList<String>()
+                val audioList = ArrayList<String>()
+
+            /*for(i in 0 until player.currentTrackGroups.length){
                 if (player.currentTrackGroups.get(i).getFormat(0).selectionFlags == C.SELECTION_FLAG_DEFAULT ){
                     audioTrack.add(Locale(player.currentTrackGroups.get(i).getFormat(0).language.toString()).displayLanguage)
                 }
-            }
-                val tempTracks = audioTrack.toArray(arrayOfNulls<CharSequence>(audioTrack.size))
+            }*/
 
-                MaterialAlertDialogBuilder(this,R.style.alertDialog)
+                for (group in player.currentTracks.groups){
+                    if (group.type == C.TRACK_TYPE_AUDIO){
+                        val groupInfo = group.mediaTrackGroup
+                        for (i in 0 until groupInfo.length){
+                            audioTrack.add(groupInfo.getFormat(i).language.toString())
+                            audioList.add("${audioList.size + 1}. " + Locale(groupInfo.getFormat(i).language.toString()).displayLanguage + " (${groupInfo.getFormat(i).label})")
+                        }
+                    }
+                }
+                if(audioList[0].contains("null")) audioList[0] = "1. Default Track"
+                val tempTracks = audioList.toArray(arrayOfNulls<CharSequence>(audioList.size))
+
+                val audioDialog = MaterialAlertDialogBuilder(this,R.style.alertDialog)
                     .setTitle("Select Language")
                     .setOnCancelListener {
                     playVideo()
                 }
-                    .setBackground(ColorDrawable(0xFF000000.toInt()))
+//                    .setBackground(ColorDrawable(0xFF000000.toInt()))
+                    .setPositiveButton("Audio Off"){self,_ ->
+                        trackSelector.setParameters(trackSelector.buildUponParameters().setRendererDisabled(
+                           C.TRACK_TYPE_AUDIO, true
+                        ))
+                        self.dismiss()
+                    }
                     .setItems(tempTracks){_,position ->
-                    Toast.makeText(this,audioTrack[position] + "Selected ", Toast.LENGTH_SHORT).show()
+//                    Toast.makeText(this,audioList[position] + "Selected ", Toast.LENGTH_SHORT).show()
+                        Snackbar.make(binding.root, audioList[position] + " Selected", 3000).show()
                     trackSelector.setParameters(trackSelector.buildUponParameters()
+                        .setRendererDisabled(C.TRACK_TYPE_AUDIO, false)
                         .setPreferredAudioLanguage(audioTrack[position]))
 
                 }
                     .create()
-                    .show()
+                    //.show()
+                audioDialog.show()
+                audioDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE)
+                audioDialog.window?.setBackgroundDrawable(ColorDrawable(0x99000000.toInt()))
             }
             //--------------------subtitle-------------------------------------------------------------------------
             bindingF.subtitleBtn.setOnClickListener {
