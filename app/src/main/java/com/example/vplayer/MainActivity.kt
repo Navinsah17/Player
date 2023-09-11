@@ -1,34 +1,35 @@
 package com.example.vplayer
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import android.net.Uri
 import android.os.*
 import androidx.appcompat.app.AppCompatActivity
 import android.provider.MediaStore
-import android.view.LayoutInflater
+
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.vplayer.databinding.ActivityMainBinding
-import com.example.vplayer.databinding.FeaturesBinding
 import com.example.vplayer.dataclass.Folder
 import com.example.vplayer.dataclass.Video
+import com.example.vplayer.dataclass.getAllVideo
 import com.example.vplayer.fragment.FolderFragment
 import com.example.vplayer.fragment.VideoFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-
-import java.io.File
+//import java.io.File
+//import android.annotation.SuppressLint
+//import android.graphics.drawable.ColorDrawable
+//import android.net.Uri
+//import android.view.LayoutInflater
+//import com.example.vplayer.databinding.FeaturesBinding
+//import androidx.core.content.ContextCompat
+//import android.view.View
 import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
@@ -71,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         if (requestRuntimePermission()){
             folderList = ArrayList()
-            videoList = getAllVideo()
+            videoList = getAllVideo(this)
             setFragment(VideoFragment())
 
 
@@ -97,7 +98,7 @@ class MainActivity : AppCompatActivity() {
 
 
         binding.bottomNav.setOnItemSelectedListener {
-            if(dataChanged) videoList = getAllVideo()
+            if(dataChanged) videoList = getAllVideo(this)
             when (it.itemId) {
                 R.id.videoView -> setFragment(VideoFragment())
                 R.id.foldersView -> setFragment(FolderFragment())
@@ -188,7 +189,7 @@ class MainActivity : AppCompatActivity() {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
                folderList = ArrayList()
-               videoList = getAllVideo()
+               videoList = getAllVideo(this)
                 setFragment(VideoFragment())
             }
             else Snackbar.make(binding.root, "Storage Permission Needed!!", 5000)
@@ -204,7 +205,7 @@ class MainActivity : AppCompatActivity() {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
                 folderList = ArrayList()
-                videoList = getAllVideo()
+                videoList = getAllVideo(this)
                 setFragment(VideoFragment())
             }
             else Snackbar.make(binding.root, "Storage Permission Needed!!", 5000)
@@ -226,50 +227,7 @@ class MainActivity : AppCompatActivity() {
             return true
         return super.onOptionsItemSelected(item)
     }
-    @SuppressLint("Recycle", "Range", "SuspiciousIndentation")
-    private fun getAllVideo(): ArrayList<Video>{
-        val sortEditor = getSharedPreferences("Sorting", MODE_PRIVATE)
-        sortValue = sortEditor.getInt("sortValue",0)
-        val tempList = ArrayList<Video>()
-        val tempFolderList = ArrayList<String>()
-        val projection = arrayOf(
-            MediaStore.Video.Media.TITLE, MediaStore.Video.Media.SIZE, MediaStore.Video.Media._ID,
-            MediaStore.Video.Media.BUCKET_DISPLAY_NAME, MediaStore.Video.Media.DATA, MediaStore.Video.Media.DATE_ADDED,
-            MediaStore.Video.Media.DURATION, MediaStore.Video.Media.BUCKET_ID)
-        val cursor = this.contentResolver.query(
-            MediaStore.Video.Media.EXTERNAL_CONTENT_URI, projection, null, null,
-            sortList[sortValue])
-        if(cursor != null)
-            if(cursor.moveToNext())
-                do {
-                    //checking null safety with ?: operator
-                    val titleC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.TITLE))?:"Unknown"
-                    val idC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media._ID))?:"Unknown"
-                    val folderC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_DISPLAY_NAME))?:"Internal Storage"
-                    val folderIdC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_ID))?:"Unknown"
-                    val sizeC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.SIZE))?:"0"
-                    val pathC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA))?:"Unknown"
-                    val durationC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DURATION))?.toLong()?:0L
 
-                    try {
-                        val file = File(pathC)
-                        val artUriC = Uri.fromFile(file)
-                        val video = Video(title = titleC, id = idC, folderName = folderC, duration = durationC, size = sizeC,
-                            path = pathC, artUri = artUriC)
-                        if(file.exists()) tempList.add(video)
-
-
-                        if(!tempFolderList.contains(folderC) && !folderC.contains("Internal Storage")){
-                            tempFolderList.add(folderC)
-                            folderList.add(Folder(id = folderIdC, folderName = folderC))
-                        }
-
-
-                    }catch (e:Exception){}
-                }while (cursor.moveToNext())
-        cursor?.close()
-        return tempList
-    }
 
     override fun onDestroy() {
         super.onDestroy()

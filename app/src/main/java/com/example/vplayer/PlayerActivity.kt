@@ -45,6 +45,8 @@ import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
+import com.google.android.exoplayer2.ui.DefaultTimeBar
+import com.google.android.exoplayer2.ui.TimeBar
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.File
 import java.text.DecimalFormat
@@ -151,6 +153,7 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
                 doubleTap()
                 playVideo()
                 playInFullScreen(enable = isFull)
+                seekbarfeatures()
                 //setVisibility()
             }
         }
@@ -429,6 +432,8 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
 
         nowlayingId = playerList[position].id
 
+        seekbarfeatures()
+
         binding.playerView.setControllerVisibilityListener {
             when{
                 isLock -> binding.lockBtn.visibility = View.VISIBLE
@@ -551,6 +556,22 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
         })
         binding.ytOverlay.player(player)
     }
+
+    private fun seekbarfeatures(){
+        findViewById<DefaultTimeBar>(com.google.android.exoplayer2.ui.R.id.exo_progress).addListener(object : TimeBar.OnScrubListener{
+            override fun onScrubStart(timeBar: TimeBar, position: Long) {
+                pauseVideo()
+            }
+
+            override fun onScrubMove(timeBar: TimeBar, position: Long) {
+                player.seekTo(position)
+            }
+
+            override fun onScrubStop(timeBar: TimeBar, position: Long, canceled: Boolean) {
+                playVideo()
+            }
+
+        })}
 
 
     override fun onDestroy() {

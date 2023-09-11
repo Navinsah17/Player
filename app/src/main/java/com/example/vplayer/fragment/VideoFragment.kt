@@ -13,6 +13,7 @@ import com.example.vplayer.PlayerActivity
 import com.example.vplayer.R
 import com.example.vplayer.adapter.VideoAdapter
 import com.example.vplayer.databinding.FragmentVideoBinding
+import com.example.vplayer.dataclass.getAllVideo
 import com.google.android.material.search.SearchView
 
 class VideoFragment : Fragment() {
@@ -38,6 +39,14 @@ class VideoFragment : Fragment() {
         adapter = VideoAdapter(requireContext(),MainActivity.videoList)
         binding.videoRV.adapter = adapter
         binding.totalVds.text = "Total Videos: ${MainActivity.videoList.size}"
+
+        binding.root.setOnRefreshListener {
+            MainActivity.videoList = getAllVideo(requireContext())
+            adapter.updateList(MainActivity.videoList)
+            binding.totalVds.text = "Total Videos: ${MainActivity.videoList.size}"
+
+            binding.root.isRefreshing = false
+        }
         binding.nowplayingBtn.setOnClickListener {
 
             val intent =  Intent(requireContext(),PlayerActivity::class.java)
