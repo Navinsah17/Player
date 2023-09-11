@@ -67,24 +67,54 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
-
-
-  <com.google.android.exoplayer2.ui.DefaultTimeBar
-      android:id="@id/exo_progress"
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginHorizontal="8dp"
-      android:layout_marginBottom="40dp"
-      app:buffered_color="#80FFFFFF"
-      app:layout_constraintBottom_toBottomOf="@+id/bottomcontroller"
+      android:orientation="horizontal"
+      app:layout_constraintBottom_toTopOf="@+id/bottomcontroller"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintHorizontal_bias="0.444"
       app:layout_constraintStart_toStartOf="parent"
-      app:played_color="@color/white"
-      app:scrubber_color="@color/white"
-      app:scrubber_disabled_size="5dp"
-      app:scrubber_enabled_size="10dp"
-      app:unplayed_color="#80FFFFFF" />
+      android:layout_marginStart="7dp"
+      android:layout_marginEnd="7dp"
+      >
+    <TextView android:id="@id/exo_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:layout_margin="5dp"
+        android:text="@string/duration"
+        android:textColor="@color/white"
+        android:gravity="start"/>
+    <com.google.android.exoplayer2.ui.DefaultTimeBar
+        android:id="@id/exo_progress"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginBottom="5dp"
+        app:buffered_color="#80FFFFFF"
+        app:played_color="@color/white"
+        app:scrubber_color="@color/white"
+        app:scrubber_disabled_size="5dp"
+        app:scrubber_enabled_size="10dp"
+        app:unplayed_color="#80FFFFFF"
+        android:layout_weight="15"
+        />
+
+    <TextView android:id="@id/exo_duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:layout_margin="5dp"
+        android:text="@string/loading"
+        android:textColor="@color/white"
+        android:gravity="end"/>
+
+  </LinearLayout>
+
+
 
   <LinearLayout
       android:id="@+id/bottomcontroller"
@@ -155,14 +185,14 @@
       >
 
 
-    <TextView android:id="@id/exo_position"
+    <!--<TextView android:id="@id/exo_position"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12sp"
         android:textStyle="bold"
         android:layout_margin="5dp"
         android:text="@string/duration"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"/>-->
 
     <!--<View android:id="@id/exo_progress_placeholder"
       android:layout_width="0dp"
@@ -177,14 +207,14 @@
         android:layout_marginVertical="5dp"
         android:textColor="@color/white"/>
 
-    <TextView android:id="@id/exo_duration"
+    <!--<TextView android:id="@id/exo_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12sp"
         android:textStyle="bold"
         android:layout_margin="5dp"
         android:text="@string/loading"
-        android:textColor="@color/white"/>
+        android:textColor="@color/white"/>-->
 
   </LinearLayout>
 

@@ -64,6 +64,7 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
     private lateinit var fullScreenBtn : ImageButton
     private lateinit var gestureDetectorCompat: GestureDetectorCompat
     private var brightness: Int = 0
+    private var volume: Int = 0
 
     companion object{
         lateinit var player : SimpleExoPlayer
@@ -97,11 +98,11 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
         fullScreenBtn = findViewById(R.id.fullScreenBtn)
         gestureDetectorCompat = GestureDetectorCompat(this,this)
         //full screen------------------------------------
-//        WindowCompat.setDecorFitsSystemWindows(window,false)
-//        WindowInsetsControllerCompat(window,binding.root).let { controller ->
-//            controller.hide(WindowInsetsCompat.Type.systemBars())
-//            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-//        }
+        WindowCompat.setDecorFitsSystemWindows(window,false)
+        WindowInsetsControllerCompat(window,binding.root).let { controller ->
+            controller.hide(WindowInsetsCompat.Type.systemBars())
+            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
         //-----------------------------------------------------
 
         try{
@@ -560,10 +561,20 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
         })
         binding.ytOverlay.player(player)
         binding.playerView.setOnTouchListener { _, motionEvent ->
-            gestureDetectorCompat.onTouchEvent(motionEvent)
+            /*gestureDetectorCompat.onTouchEvent(motionEvent)
             if(motionEvent.action == MotionEvent.ACTION_UP){
                 binding.brightnessBtn.visibility = View.GONE
                 binding.volumeBtn.visibility = View.GONE
+            }*/
+
+            binding.playerView.isDoubleTapEnabled = false
+            if(!isLock) {
+                binding.playerView.isDoubleTapEnabled = true
+                gestureDetectorCompat.onTouchEvent(motionEvent)
+                if (motionEvent.action == MotionEvent.ACTION_UP) {
+                    binding.brightnessBtn.visibility = View.GONE
+                    binding.volumeBtn.visibility = View.GONE
+                }
             }
             return@setOnTouchListener false
         }
@@ -630,6 +641,13 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
             else{
                 binding.brightnessBtn.visibility = View.GONE
                 binding.volumeBtn.visibility = View.VISIBLE
+
+                val maxVolume = audioManager!!.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+                val increase = distanceY > 0
+                val newValue = if(increase) volume + 1 else volume - 1
+                if(newValue in 0..maxVolume) volume = newValue
+                binding.volumeBtn.text = volume.toString()
+                audioManager!!.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0)
             }
         }
         return true

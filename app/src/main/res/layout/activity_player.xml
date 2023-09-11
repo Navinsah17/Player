@@ -58,6 +58,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:drawableLeft="@drawable/baseline_brightness_6_24"
         android:text="@string/O"
+        app:layout_constraintHorizontal_bias="0.9"
         android:textStyle="bold"
         android:visibility="gone"
         />
@@ -73,6 +74,7 @@
         android:drawableLeft="@drawable/volume_icon"
         android:text="@string/O"
         android:textStyle="bold"
+        app:layout_constraintHorizontal_bias="0.1"
         android:visibility="gone"
         />
 
