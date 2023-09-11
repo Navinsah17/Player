@@ -38,6 +38,7 @@ import com.example.vplayer.databinding.AudioBoosterBinding
 import com.example.vplayer.databinding.FeaturesBinding
 import com.example.vplayer.databinding.SpeedBinding
 import com.example.vplayer.dataclass.Video
+import com.github.vkay94.dtpv.youtube.YouTubeOverlay
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -146,7 +147,8 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
                 speed = 1.0f
                 videoTitle.text = playerList[position].title
                 videoTitle.isSelected = true
-                binding.playerView.player = player
+                //binding.playerView.player = player
+                doubleTap()
                 playVideo()
                 playInFullScreen(enable = isFull)
                 //setVisibility()
@@ -164,7 +166,7 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
                 ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
         }
 
-        findViewById<FrameLayout>(R.id.forward).setOnClickListener(DoubleClick(callback = object : DoubleClick.Callback{
+        /*findViewById<FrameLayout>(R.id.forward).setOnClickListener(DoubleClick(callback = object : DoubleClick.Callback{
             override fun doubleClicked() {
                 binding.playerView.showController()
                 findViewById<ImageButton>(R.id.forwardbtn).visibility = View.VISIBLE
@@ -177,7 +179,7 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
                 findViewById<ImageButton>(R.id.rewindbtn).visibility = View.VISIBLE
                 player.seekTo(player.currentPosition - 10000)
             }
-        }))
+        }))*/
 
         findViewById<ImageButton>(R.id.backBtn).setOnClickListener {
             finish()
@@ -407,7 +409,8 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
         videoTitle.text = playerList[position].title
         videoTitle.isSelected = true
         player = SimpleExoPlayer.Builder(this).setTrackSelector(trackSelector).build()
-        binding.playerView.player = player
+        //binding.playerView.player = player
+        doubleTap()
         val mediaItem = MediaItem.fromUri(playerList[position].artUri)
         player.setMediaItem(mediaItem)
         player.prepare()
@@ -433,8 +436,7 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
                 else -> binding.lockBtn.visibility = View.INVISIBLE
 
             }
-            findViewById<ImageButton>(R.id.forwardbtn).visibility = View.GONE
-            findViewById<ImageButton>(R.id.rewindbtn).visibility = View.GONE
+
         }
 
 
@@ -493,18 +495,18 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
         }
         player.setPlaybackSpeed(speed)
     }
-//    private fun setVisibility(){
-//        runnable = Runnable {
-//            if (binding.playerView.isControllerVisible){
-//                hideandShow(View.VISIBLE)
-//            }else{
-//                hideandShow(View.INVISIBLE)
-//            }///----------------------------------------------handle visibility
-//            Handler(Looper.getMainLooper()).postDelayed(runnable,300)
-//
-//        }
-//        Handler(Looper.getMainLooper()).postDelayed(runnable,0)
-//    }
+/*    private fun setVisibility(){
+        runnable = Runnable {
+            if (binding.playerView.isControllerVisible){
+                hideandShow(View.VISIBLE)
+            }else{
+                hideandShow(View.INVISIBLE)
+            }///----------------------------------------------handle visibility
+            Handler(Looper.getMainLooper()).postDelayed(runnable,300)
+
+        }
+        Handler(Looper.getMainLooper()).postDelayed(runnable,0)
+    }*/
 
     @SuppressLint("MissingSuperCall")
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean) {
@@ -524,17 +526,32 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
 
     }
 
-//    private fun hideandShow(visibility : Int ){
-////        findViewById<LinearLayout>(R.id.topcontroller).visibility = visibility
-////        findViewById<LinearLayout>(R.id.bottomcontroller).visibility = visibility
-////        binding.playBtn.visibility = visibility
-//        if (isLock)
-//            binding.lockBtn.visibility = View.VISIBLE
-//        else binding.lockBtn.visibility = visibility
-//        binding.rewindbtn.visibility = View.GONE
-//        binding.forwardbtn.visibility = View.GONE
-//
-//    }
+/*    private fun hideandShow(visibility : Int ){
+        findViewById<LinearLayout>(R.id.topcontroller).visibility = visibility
+        findViewById<LinearLayout>(R.id.bottomcontroller).visibility = visibility
+        binding.playBtn.visibility = visibility
+        if (isLock)
+            binding.lockBtn.visibility = View.VISIBLE
+        else binding.lockBtn.visibility = visibility
+        binding.rewindbtn.visibility = View.GONE
+        binding.forwardbtn.visibility = View.GONE
+
+    }*/
+
+    private fun doubleTap(){
+        binding.playerView.player = player
+        binding.ytOverlay.performListener(object: YouTubeOverlay.PerformListener{
+            override fun onAnimationEnd() {
+                binding.ytOverlay.visibility = View.INVISIBLE
+            }
+
+            override fun onAnimationStart() {
+                binding.ytOverlay.visibility = View.VISIBLE
+            }
+        })
+        binding.ytOverlay.player(player)
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()

@@ -7,16 +7,36 @@
     tools:context=".PlayerActivity"
     android:background="@color/black">
 
-    <com.google.android.exoplayer2.ui.PlayerView
-        android:id="@+id/playerView"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:keepScreenOn="true"
-        app:controller_layout_id="@layout/custom_control_exoplayer"
-        app:use_controller="true"
-        tools:layout_editor_absoluteX="-49dp"
-        tools:layout_editor_absoluteY="-25dp"
-        app:show_buffering="always"/>
+        >
+        <com.github.vkay94.dtpv.DoubleTapPlayerView
+            android:id="@+id/playerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:keepScreenOn="true"
+            app:controller_layout_id="@layout/custom_control_exoplayer"
+            android:background="@color/black"
+            app:dtpv_controller="@id/yt_overlay"
+            tools:layout_editor_absoluteX="-49dp"
+            tools:layout_editor_absoluteY="-25dp"
+            app:show_buffering="always"/>
+
+        <com.github.vkay94.dtpv.youtube.YouTubeOverlay
+            android:id="@+id/yt_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:controller_layout_id="@layout/custom_control_exoplayer"
+            android:background="#77000000"
+            app:yt_playerView="@id/playerView"
+            tools:layout_editor_absoluteX="-49dp"
+            tools:layout_editor_absoluteY="-25dp"
+            android:visibility="invisible"/>
+
+    </FrameLayout>
+
+
     
 
 
@@ -27,7 +47,6 @@
         android:backgroundTint="#0000ffff"
         android:src="@drawable/lock_open_24"
         app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="invisible"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/white" />
 
