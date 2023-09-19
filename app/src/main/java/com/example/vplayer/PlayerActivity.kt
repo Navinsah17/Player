@@ -11,24 +11,17 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.icu.text.CaseMap.Title
 import android.media.AudioManager
 import android.media.audiofx.LoudnessEnhancer
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.provider.MediaStore
 import android.view.*
-import android.widget.CheckBox
-import android.widget.FrameLayout
 import android.widget.ImageButton
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.core.view.GestureDetectorCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -168,6 +161,7 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
         else findViewById<ImageButton>(R.id.repeatBtn).setImageResource(com.google.android.exoplayer2.ui.R.drawable.exo_controls_repeat_off)
 
     }
+    @SuppressLint("SuspiciousIndentation")
     private fun initializedBinding() {
         findViewById<ImageButton>(R.id.orientation_btn).setOnClickListener {
             requestedOrientation = if(resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
@@ -247,7 +241,7 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
                 playVideo()
             }.setBackground(ColorDrawable(0x803700B3.toInt())).create()
             dialog.show()
-//-----------------------------audio--------------------------------------
+//-----------------------------audio-------------------------------------
             bindingF.audioTrack.setOnClickListener {
                 dialog.dismiss()
                 playVideo()
@@ -292,7 +286,7 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
                     audioDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE)
                     audioDialog.window?.setBackgroundDrawable(ColorDrawable(0x99000000.toInt()))
             }
-            //--------------------subtitle-------------------------------------------------------------------------
+            //--------------------subtitle------------------------------------------------------------
             bindingF.subtitleBtn.setOnClickListener {
                 dialog.dismiss()
                 playVideo()

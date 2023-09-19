@@ -30,7 +30,7 @@
             app:itemTextColor="@color/black"
             app:itemIconTint="@color/cool_bluee"
             android:backgroundTint="@color/white"
-            />
+            android:background="@color/white"/>
     </androidx.appcompat.widget.LinearLayoutCompat>
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navView"

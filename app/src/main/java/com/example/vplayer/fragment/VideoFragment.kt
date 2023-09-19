@@ -1,25 +1,37 @@
 package com.example.vplayer.fragment
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.vplayer.MainActivity
+import com.example.vplayer.MainActivity.Companion.sortValue
 import com.example.vplayer.PlayerActivity
 import com.example.vplayer.R
 import com.example.vplayer.adapter.VideoAdapter
 import com.example.vplayer.databinding.FragmentVideoBinding
+import com.example.vplayer.dataclass.Video
 import com.example.vplayer.dataclass.getAllVideo
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.search.SearchView
 
 class VideoFragment : Fragment() {
 
     lateinit var adapter: VideoAdapter
     lateinit var binding: FragmentVideoBinding
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
@@ -77,7 +89,182 @@ class VideoFragment : Fragment() {
 
         })
         super.onCreateOptionsMenu(menu, inflater)
+        val sortOrderMenuItem = menu.findItem(R.id.sortOrderNav)
+        sortOrderMenuItem?.setOnMenuItemClickListener {
+            onOptionsItemSelected(sortOrderMenuItem)
+            true
+        }
+/*//        inflater.inflate(R.menu.search_view, menu)
+//        super.onCreateOptionsMenu(menu, inflater)*/
+
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.sortOrderNav -> {
+                showSortDialog()
+                return true
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun showSortDialog() {
+        val menuItems = arrayOf(
+            "Latest",
+            "Oldest",
+            "Name(A to Z)",
+            "Name(Z to A)",
+            "File Size(Smallest)",
+            "File Size(Largest)"
+        )
+
+        var value = sortValue // Initialize with the current sortValue
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Sort By")
+            .setPositiveButton("OK") { _, _ ->
+                // Save the selected sort value to SharedPreferences
+                val sortEditor =
+                    requireContext().getSharedPreferences("Sorting", AppCompatActivity.MODE_PRIVATE)
+                        .edit()
+                sortEditor.putInt("sortValue", value)
+                sortEditor.apply()
+
+                // Apply sorting based on the selected value
+                applySorting(value)
+            }
+            .setSingleChoiceItems(menuItems, sortValue) { _, pos ->
+                value = pos
+            }
+            .create()
+
+        dialog.show()
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setBackgroundColor(Color.RED)
+        //dialog.window?.setBackgroundDrawable(ColorDrawable(0xFF000000.toInt()))
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    private fun applySorting(sortValue: Int) {
+        // Determine the sorting order based on sortValue
+        val sortingOrder = when (sortValue) {
+            0 -> MediaStore.Video.Media.DATE_ADDED + " DESC"
+            1 -> MediaStore.Video.Media.DATE_ADDED
+            2 -> MediaStore.Video.Media.TITLE
+            3 -> MediaStore.Video.Media.TITLE + " DESC"
+            4 -> MediaStore.Video.Media.SIZE
+            5 -> MediaStore.Video.Media.SIZE + " DESC"
+            else -> MediaStore.Video.Media.DATE_ADDED // Default to "Latest"
+        }
+
+        /*MainActivity.videoList.sortBy { video ->
+            when (sortingOrder) {
+                MediaStore.Video.Media.DATE_ADDED + " DESC" -> video.dateAdded
+                MediaStore.Video.Media.DATE_ADDED -> video.dateAdded
+                MediaStore.Video.Media.TITLE -> video.title
+                MediaStore.Video.Media.TITLE + " DESC" -> video.title
+                MediaStore.Video.Media.SIZE -> video.size
+                MediaStore.Video.Media.SIZE + " DESC" -> video.size
+                else -> video.dateAdded // Default sorting order
+            }.toString()
+        }*/
+        val sortedVideoList = when (sortingOrder) {
+            MediaStore.Video.Media.DATE_ADDED + " DESC" -> {
+                MainActivity.videoList.sortedByDescending { it.dateAdded }
+            }
+            MediaStore.Video.Media.DATE_ADDED -> {
+                MainActivity.videoList.sortedBy { it.dateAdded }
+            }
+            MediaStore.Video.Media.TITLE -> {
+                MainActivity.videoList.sortedBy { it.title }
+            }
+            MediaStore.Video.Media.TITLE + " DESC" -> {
+                MainActivity.videoList.sortedByDescending { it.title }
+            }
+            MediaStore.Video.Media.SIZE -> {
+                MainActivity.videoList.sortedBy { it.size }
+            }
+            MediaStore.Video.Media.SIZE + " DESC" -> {
+                MainActivity.videoList.sortedByDescending { it.size }
+            }
+            else -> {
+                MainActivity.videoList.sortedByDescending { it.dateAdded } // Default sorting order
+            }
+        }
+
+        // Update the RecyclerView with the sorted list
+        val sortedVideoArrayList = ArrayList(sortedVideoList)
+
+        // Update the RecyclerView with the sorted ArrayList
+        adapter.updateList(sortedVideoArrayList)
+        adapter.notifyDataSetChanged()
+
+    }
+    class VideoComparator : Comparator<Video> {
+        override fun compare(video1: Video, video2: Video): Int {
+            // Compare videos based on their size
+            return video1.size.compareTo(video2.size)
+        }
+    }
+
+    /*private  fun sortVideos(){
+
+        val menuItems = arrayOf(
+            "Latest",
+            "Oldest",
+            "Name(A to Z)",
+            "Name(Z to A)",
+            "File Size(Smallest)",
+            "File Size(Largest)"
+        )
+        //Log.d("Sorting", "Sorting videos...")
+
+        var selectedSortOption = MainActivity.sortValue
+        val dialog = MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Sort By")
+            .setPositiveButton("OK") { _, _ ->
+                val sortEditor = requireContext().getSharedPreferences("Sorting",
+                    Context.MODE_PRIVATE
+                ).edit()
+                int id = item.getItemId();
+                sortEditor.putInt("sortValue", selectedSortOption)
+                sortEditor.apply()
+
+                val selectedSortCriteria = MainActivity.sortList[selectedSortOption]
+                when (selectedSortCriteria) {
+                    MediaStore.Video.Media.DATE_ADDED + " DESC" -> {
+                        MainActivity.videoList.sortByDescending { it.dateAdded }
+                    }
+                    MediaStore.Video.Media.DATE_ADDED -> {
+                        MainActivity.videoList.sortBy { it.dateAdded }
+                    }
+                    MediaStore.Video.Media.TITLE -> {
+                        MainActivity.videoList.sortBy { it.title }
+                    }
+                    MediaStore.Video.Media.TITLE + " DESC" -> {
+                        MainActivity.videoList.sortByDescending { it.title }
+                    }
+                    MediaStore.Video.Media.SIZE -> {
+                        MainActivity.videoList.sortBy { it.size }
+                    }
+                    MediaStore.Video.Media.SIZE + " DESC" -> {
+                        MainActivity.videoList.sortByDescending { it.size }
+                    }
+                }
+//                finish()
+//                startActivity(intent)
+            }
+            .setSingleChoiceItems(menuItems, selectedSortOption) { _, pos ->
+                selectedSortOption = pos
+                Log.d("Sorting", "Selected sort option: $selectedSortOption")
+            }
+            .create()
+
+        dialog.show()
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setBackgroundColor(Color.RED)
+
+
+    }*/
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()

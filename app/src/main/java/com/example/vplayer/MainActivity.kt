@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.themesNav -> toast("themes")
 
 
-                R.id.sortOrderNav -> {
+                /*R.id.sortOrderNav -> {
                     val menuItems = arrayOf(
                         "Latest",
                         "Oldest",
@@ -144,6 +144,7 @@ class MainActivity : AppCompatActivity() {
                     dialog.show()
                     dialog.getButton(AlertDialog.BUTTON_POSITIVE).setBackgroundColor(Color.RED)
                 }
+*/
 
                 R.id.aboutNav -> toast("about")
                 R.id.exitNav -> exitProcess(1)
@@ -152,6 +153,15 @@ class MainActivity : AppCompatActivity() {
             return@setNavigationItemSelectedListener true
         }
     }
+    /*private val sharedPreferences by lazy {
+        getSharedPreferences("Sorting", AppCompatActivity.MODE_PRIVATE)
+    }
+
+    var sortValue: Int
+        get() = sharedPreferences.getInt("sortValue", 0)
+        set(value) {
+            sharedPreferences.edit().putInt("sortValue", value).apply()
+        }*/
 
     private fun setFragment(fragment: Fragment){
         currentFragment = fragment

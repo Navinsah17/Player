@@ -6,4 +6,9 @@
         android:icon="@drawable/search_icon"
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
+
+    <item android:id="@+id/sortOrderNav"
+        android:title="@string/sort_order"
+        android:icon="@drawable/sort_order_icon"
+        app:showAsAction="ifRoom|collapseActionView"/>
 </menu>
