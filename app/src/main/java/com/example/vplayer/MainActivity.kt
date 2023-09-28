@@ -63,12 +63,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setTheme(R.style.coolBlueeNav)
         setContentView(binding.root)
-
-
-
-        toggle = ActionBarDrawerToggle(this,binding.root,R.string.open,R.string.close)
-        binding.root.addDrawerListener(toggle)
-        toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         if (requestRuntimePermission()){
             folderList = ArrayList()
@@ -76,20 +70,6 @@ class MainActivity : AppCompatActivity() {
             setFragment(VideoFragment())
 
 
-//            runnable = Runnable {
-//
-//                if(dataChanged){
-//                    videoList = getAllVideo()
-//                    dataChanged = false
-//                    adapterChanged = true
-//
-//                }
-//
-//                ///----------------------------------------------handle visibility
-//                Handler(Looper.getMainLooper()).postDelayed(runnable!!,200)
-//
-//                }
-//                Handler(Looper.getMainLooper()).postDelayed(runnable!!,0)
 
         }else{
             folderList = ArrayList()
@@ -106,62 +86,7 @@ class MainActivity : AppCompatActivity() {
             return@setOnItemSelectedListener true
         }
 
-        binding.navView.setNavigationItemSelectedListener {
-            when(it.itemId){
-                R.id.navYoutube -> toast("youtube")
-                R.id.navUrl-> toast("online")
-                R.id.themesNav -> toast("themes")
-
-
-                /*R.id.sortOrderNav -> {
-                    val menuItems = arrayOf(
-                        "Latest",
-                        "Oldest",
-                        "Name(A to Z)",
-                        "Name(Z to A)",
-                        "File Size(Smallest)",
-                        "File Size(Largest)"
-                    )
-
-                    var value = sortValue
-                    val dialog = MaterialAlertDialogBuilder(this)
-                        .setTitle("Sort By")
-                        .setPositiveButton("OK") { _, _ ->
-                            val sortEditor = getSharedPreferences("Sorting", MODE_PRIVATE).edit()
-                            sortEditor.putInt("sortValue", value)
-                            sortEditor.apply()
-
-                            //for restarting app
-                            finish()
-                            startActivity(intent)
-                        }
-
-                        .setSingleChoiceItems(menuItems, sortValue) { _, pos ->
-                            value = pos
-                        }
-
-                        .create()
-                    dialog.show()
-                    dialog.getButton(AlertDialog.BUTTON_POSITIVE).setBackgroundColor(Color.RED)
-                }
-*/
-
-                R.id.aboutNav -> toast("about")
-                R.id.exitNav -> exitProcess(1)
-            }
-
-            return@setNavigationItemSelectedListener true
-        }
     }
-    /*private val sharedPreferences by lazy {
-        getSharedPreferences("Sorting", AppCompatActivity.MODE_PRIVATE)
-    }
-
-    var sortValue: Int
-        get() = sharedPreferences.getInt("sortValue", 0)
-        set(value) {
-            sharedPreferences.edit().putInt("sortValue", value).apply()
-        }*/
 
     private fun setFragment(fragment: Fragment){
         currentFragment = fragment
@@ -232,11 +157,11 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this,message,Toast.LENGTH_SHORT).show()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (toggle.onOptionsItemSelected(item))
             return true
         return super.onOptionsItemSelected(item)
-    }
+    }*/
 
 
     override fun onDestroy() {
