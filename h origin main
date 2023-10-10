@@ -1,0 +1,173 @@
+[33mcommit 23e4807058fd0d54a32274f35b837f1a9d6890a7[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Tue Oct 10 21:54:56 2023 +0530
+
+    ui changed
+
+[33mcommit eac2f4d782f367f951a385d9bb147ea0657b1ec9[m[33m ([m[1;31mneworigin/main[m[33m, [m[1;31mneworigin/HEAD[m[33m)[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Thu Sep 28 20:50:34 2023 +0530
+
+    Initial commit
+
+[33mcommit 4ff38766107730be1cbf112fe2fdddd14d2ecdf7[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Tue Sep 19 18:11:37 2023 +0530
+
+    sort feature
+
+[33mcommit f6e8caf224ec06e576377c85bada2e07a85ce3dc[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Tue Sep 12 11:24:40 2023 +0530
+
+    subtitle feature handled
+
+[33mcommit 2ce33972ec093ca8ef27a13a19b9fea1d00d15c9[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Tue Sep 12 00:49:58 2023 +0530
+
+    audio track feature handled snackbar added
+
+[33mcommit ec940066932a8a49d6402384a02f29c0fdc05153[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Mon Sep 11 23:58:46 2023 +0530
+
+    volumw swipe gesture handle seek bar modification done
+
+[33mcommit 9b0ba7ad88f6bcf645956958c2eeb654df157cd6[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Mon Sep 11 15:10:45 2023 +0530
+
+    brightness feature on with swipe gesture handled
+
+[33mcommit 0043b4f5f3d815a20837ed552b4f980356a03140[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Mon Sep 11 14:10:13 2023 +0530
+
+    refresh feature handled in video fragment
+
+[33mcommit e823b6decbf27ca966020ca401f4e2d0150a6341[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Mon Sep 11 13:38:37 2023 +0530
+
+    double tap feature enhanced and hiding after issues resolved
+
+[33mcommit bcafa2dc35748c62725a3c5e7dfe25a0fbd3f759[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Sun Sep 10 12:45:51 2023 +0530
+
+    buffering handlled while video is loading
+
+[33mcommit 158310337416346946b360e21ee74654d7f691e2[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Sun Sep 10 12:29:49 2023 +0530
+
+    modification in custom_control_exoplayer playpause button hiding issue resolved
+
+[33mcommit 2567606840a6da9cdaa886fd790f3f1fe0918be7[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Sat Sep 9 13:51:59 2023 +0530
+
+    modification
+
+[33mcommit d5a0e0a87a874827332de1f08b2f07badaeb0f8a[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Sat Sep 9 12:58:09 2023 +0530
+
+    orientation added
+
+[33mcommit d95bd2018d7f84f12822ff5778eb80b8d9c7fd2d[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Sat Sep 9 11:09:39 2023 +0530
+
+    //request permissionR()
+
+[33mcommit 6b1cd90bb40506a61ba02e8f7f5286b674793d61[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Sat Sep 9 11:04:53 2023 +0530
+
+    Delete and rename issue resolved where changes were not reflected in the fragments.
+
+[33mcommit 0a42ef33f81768aa6471ab2e621f6980b8ce8c5d[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Fri Sep 8 13:38:10 2023 +0530
+
+    Issue of loading video  on launch  is handled
+
+[33mcommit 3098b5962f79c28223ed1c7e97ad16ad952547d3[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Thu Aug 3 13:04:33 2023 +0530
+
+    android 11 and above delete feature rename feature issue handled
+
+[33mcommit be9bdfb2a1dceae967ef56e6821c8e2a382f688a[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Wed Aug 2 18:27:09 2023 +0530
+
+    delete function implemented // call features handled
+
+[33mcommit 8caa40b67912fb01c9ed0ab70e6f389f5c1f1430[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Tue Aug 1 21:07:44 2023 +0530
+
+    icon added // double click handled
+
+[33mcommit 678a63edf6a95747324c76df1e0b2e6b507a9468[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Tue Aug 1 21:03:26 2023 +0530
+
+    Initial commit // now playing //
+
+[33mcommit e90f6f6484f973ceaf21a5cdb7ce3328c8f0a46e[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Sat Mar 4 20:59:22 2023 +0530
+
+    video ifo handled sortorder feature hanled.
+
+[33mcommit 5aa163c4a3c4a04594fe4b25843f9f70253d2017[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Sat Feb 25 17:45:47 2023 +0530
+
+    SleepTimer , Subtittle btn, audio_booster functionalities addded
+
+[33mcommit 9dd4e60d3141b7f6df8f22ecfc31d75e8123ae18[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Tue Feb 14 22:50:41 2023 +0530
+
+    First Commit
+
+[33mcommit 47f931a4554da52f1817c449805d9ed5208f1f82[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Sat Feb 4 22:20:35 2023 +0530
+
+    First Commit
+
+[33mcommit 65a9af6443de7da8f68d93476cc0c10f58dcb4dd[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Sat Feb 4 12:48:49 2023 +0530
+
+    First Commit
+
+[33mcommit 6d783ad8173695f0ae9acfb1dbd99aed08c3f95e[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Sat Feb 4 12:23:13 2023 +0530
+
+    First Commit
+
+[33mcommit dce3f724b1aa78ae21a2bd47b362284efa588e77[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Wed Feb 1 16:36:31 2023 +0530
+
+    First Commit
+
+[33mcommit 4a60e3362712f3ce94403567c7ebc7854d7e4995[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Wed Feb 1 16:11:40 2023 +0530
+
+    First Commit
+
+[33mcommit 030b2ab2715de8bc89edeb154679071e0017a6a9[m
+Author: Navin Sah <navinkrsah17@gmail.com>
+Date:   Wed Feb 1 16:09:47 2023 +0530
+
+    First Commit
