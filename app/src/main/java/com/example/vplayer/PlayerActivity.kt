@@ -170,21 +170,6 @@ class PlayerActivity : AppCompatActivity(), AudioManager.OnAudioFocusChangeListe
                 ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
         }
 
-        /*findViewById<FrameLayout>(R.id.forward).setOnClickListener(DoubleClick(callback = object : DoubleClick.Callback{
-            override fun doubleClicked() {
-                binding.playerView.showController()
-                findViewById<ImageButton>(R.id.forwardbtn).visibility = View.VISIBLE
-                player.seekTo(player.currentPosition + 10000)
-            }
-        }))
-        findViewById<FrameLayout>(R.id.rewind).setOnClickListener(DoubleClick(callback = object : DoubleClick.Callback{
-            override fun doubleClicked() {
-                binding.playerView.showController()
-                findViewById<ImageButton>(R.id.rewindbtn).visibility = View.VISIBLE
-                player.seekTo(player.currentPosition - 10000)
-            }
-        }))*/
-
         findViewById<ImageButton>(R.id.backBtn).setOnClickListener {
             finish()
         }

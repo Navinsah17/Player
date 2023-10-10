@@ -53,8 +53,4 @@
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

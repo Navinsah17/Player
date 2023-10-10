@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.example.vplayer.databinding.ActivityMainBinding
@@ -63,7 +64,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setTheme(R.style.coolBlueeNav)
         setContentView(binding.root)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setSupportActionBar(binding.toolbar)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        //supportActionBar?.setDisplayHomeAsUpEnabled(true)
         if (requestRuntimePermission()){
             folderList = ArrayList()
             videoList = getAllVideo(this)

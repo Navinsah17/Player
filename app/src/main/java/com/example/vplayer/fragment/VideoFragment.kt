@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.*
+import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -52,6 +53,8 @@ class VideoFragment : Fragment() {
         binding.videoRV.adapter = adapter
         binding.totalVds.text = "Total Videos: ${MainActivity.videoList.size}"
 
+        //refresher
+
         binding.root.setOnRefreshListener {
             MainActivity.videoList = getAllVideo(requireContext())
             adapter.updateList(MainActivity.videoList)
@@ -70,7 +73,12 @@ class VideoFragment : Fragment() {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_view, menu)
-        val searchView = menu.findItem(R.id.searchView)?.actionView as androidx.appcompat.widget.SearchView
+        val searchItem = menu.findItem(R.id.searchView)
+        val searchView = searchItem?.actionView as androidx.appcompat.widget.SearchView
+        val searchEditTextId = androidx.appcompat.R.id.search_src_text
+        val searchEditText = searchView.findViewById<EditText>(searchEditTextId)
+        searchEditText.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+        //val searchView = menu.findItem(R.id.searchView)?.actionView as androidx.appcompat.widget.SearchView
         searchView.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean = true
 
@@ -157,17 +165,6 @@ class VideoFragment : Fragment() {
             else -> MediaStore.Video.Media.DATE_ADDED // Default to "Latest"
         }
 
-        /*MainActivity.videoList.sortBy { video ->
-            when (sortingOrder) {
-                MediaStore.Video.Media.DATE_ADDED + " DESC" -> video.dateAdded
-                MediaStore.Video.Media.DATE_ADDED -> video.dateAdded
-                MediaStore.Video.Media.TITLE -> video.title
-                MediaStore.Video.Media.TITLE + " DESC" -> video.title
-                MediaStore.Video.Media.SIZE -> video.size
-                MediaStore.Video.Media.SIZE + " DESC" -> video.size
-                else -> video.dateAdded // Default sorting order
-            }.toString()
-        }*/
         val sortedVideoList = when (sortingOrder) {
             MediaStore.Video.Media.DATE_ADDED + " DESC" -> {
                 MainActivity.videoList.sortedByDescending { it.dateAdded }
@@ -207,64 +204,7 @@ class VideoFragment : Fragment() {
         }
     }
 
-    /*private  fun sortVideos(){
 
-        val menuItems = arrayOf(
-            "Latest",
-            "Oldest",
-            "Name(A to Z)",
-            "Name(Z to A)",
-            "File Size(Smallest)",
-            "File Size(Largest)"
-        )
-        //Log.d("Sorting", "Sorting videos...")
-
-        var selectedSortOption = MainActivity.sortValue
-        val dialog = MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Sort By")
-            .setPositiveButton("OK") { _, _ ->
-                val sortEditor = requireContext().getSharedPreferences("Sorting",
-                    Context.MODE_PRIVATE
-                ).edit()
-                int id = item.getItemId();
-                sortEditor.putInt("sortValue", selectedSortOption)
-                sortEditor.apply()
-
-                val selectedSortCriteria = MainActivity.sortList[selectedSortOption]
-                when (selectedSortCriteria) {
-                    MediaStore.Video.Media.DATE_ADDED + " DESC" -> {
-                        MainActivity.videoList.sortByDescending { it.dateAdded }
-                    }
-                    MediaStore.Video.Media.DATE_ADDED -> {
-                        MainActivity.videoList.sortBy { it.dateAdded }
-                    }
-                    MediaStore.Video.Media.TITLE -> {
-                        MainActivity.videoList.sortBy { it.title }
-                    }
-                    MediaStore.Video.Media.TITLE + " DESC" -> {
-                        MainActivity.videoList.sortByDescending { it.title }
-                    }
-                    MediaStore.Video.Media.SIZE -> {
-                        MainActivity.videoList.sortBy { it.size }
-                    }
-                    MediaStore.Video.Media.SIZE + " DESC" -> {
-                        MainActivity.videoList.sortByDescending { it.size }
-                    }
-                }
-//                finish()
-//                startActivity(intent)
-            }
-            .setSingleChoiceItems(menuItems, selectedSortOption) { _, pos ->
-                selectedSortOption = pos
-                Log.d("Sorting", "Selected sort option: $selectedSortOption")
-            }
-            .create()
-
-        dialog.show()
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setBackgroundColor(Color.RED)
-
-
-    }*/
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
