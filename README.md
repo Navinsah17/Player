@@ -25,4 +25,4 @@ Easily track and manage the videos currently being played with the Now Playing f
 Organize your video library efficiently using the sort feature, allowing you to arrange videos based on various criteria such as date, name, size, or type.
 
 
-![Screenshot_2024-01-28-20-40-18-79_4ae14d5f6fc8f736c486e84c53783243](https://github.com/Navinsah17/Player/assets/103503787/a9512dfc-2a5b-4e9a-8a99-d686d08d37a0)
+
