@@ -1,16 +1,13 @@
 package com.example.vplayer.fragment
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.*
 import android.widget.EditText
-import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -25,7 +22,6 @@ import com.example.vplayer.databinding.FragmentVideoBinding
 import com.example.vplayer.dataclass.Video
 import com.example.vplayer.dataclass.getAllVideo
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.search.SearchView
 
 class VideoFragment : Fragment() {
 
@@ -52,6 +48,13 @@ class VideoFragment : Fragment() {
         adapter = VideoAdapter(requireContext(),MainActivity.videoList)
         binding.videoRV.adapter = adapter
         binding.totalVds.text = "Total Videos: ${MainActivity.videoList.size}"
+
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                binding.videoRV.scrollToPosition(0)
+            }
+        })
 
         //refresher
 
@@ -211,8 +214,10 @@ class VideoFragment : Fragment() {
         if(PlayerActivity.position != -1) binding.nowplayingBtn.visibility = View.VISIBLE
         if(MainActivity.dataChanged) adapter.notifyDataSetChanged()
         MainActivity.dataChanged = false
-//
+
+
     }
+
 
 
 }
