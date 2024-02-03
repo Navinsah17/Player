@@ -52,7 +52,12 @@ class VideoFragment : Fragment() {
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                binding.videoRV.scrollToPosition(0)
+                val layoutManager = binding.videoRV.layoutManager as LinearLayoutManager
+                if (layoutManager.findFirstVisibleItemPosition() == 0) {
+                    requireActivity().finish()
+                } else {
+                    binding.videoRV.scrollToPosition(0)
+                }
             }
         })
 
